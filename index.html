@@ -55,6 +55,10 @@
     input, select { width: 100%; padding: 12px 14px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); font-size: 14px; }
     input:focus, select:focus, button:focus { outline: none; box-shadow: var(--focus); }
     .row { display:flex; gap: 12px; align-items:center; }
+    .section { background: var(--surface); border:1px dashed var(--border); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+    .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 12px; }
+    .section-grid { display:grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
+    .section-grid .row { display: contents; }
     .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
     .muted { color: var(--muted); }
     .btn { padding: 11px 16px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); cursor:pointer; font-weight:600;}
@@ -124,34 +128,62 @@
     <div class="grid tabpanel" id="panel-quick">
       <div class="col-6 card">
         <h2 id="t_quick_h2">Quick-Calc</h2>
-        <div class="row">
-          <div style="flex:1">
-            <label id="t_label_model">Modell</label>
-            <select id="q_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select>
-          </div>
-          <div style="width: 210px">
-            <label id="t_label_util">Nutzungsgrad (Fahrzeit)</label>
-            <input id="q_util" type="number" value="0.85" step="0.01" min="0" max="1"><div class="hint" id="t_hint_util">0.85 = 85%</div>
-          </div>
-        </div>
-        <label id="t_label_area">Flaeche pro Reinigung (m²)</label>
-        <input id="q_area" type="number" value="10000" min="0">
-        <div class="row">
-          <div style="flex:1">
-            <label id="t_label_freq">Reinigungen/Woche</label><input id="q_freq" type="number" value="5" step="0.1" min="0">
-          </div>
-          <div style="flex:1">
-            <label id="t_label_weeks">Wochen/Jahr</label><input id="q_weeks" type="number" value="52" min="1" max="53">
+
+        <div class="section">
+          <div class="section-title" id="t_quick_section_profile">Einsatzprofil</div>
+          <div class="section-grid">
+            <div>
+              <label id="t_label_area">Flaeche pro Reinigung (m²)</label>
+              <input id="q_area" type="number" value="10000" min="0">
+            </div>
+            <div>
+              <label id="t_label_freq">Reinigungen/Woche</label>
+              <input id="q_freq" type="number" value="5" step="0.1" min="0">
+            </div>
+            <div>
+              <label id="t_label_weeks">Wochen/Jahr</label>
+              <input id="q_weeks" type="number" value="52" min="1" max="53">
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div style="flex:1"><label id="t_label_wage">Stundenlohn inkl. NK (CHF/h)</label><input id="q_wage" type="number" value="35" step="0.5" min="0"></div>
-          <div style="flex:1"><label id="t_label_currprod">Heutige Produktivitaet (m²/h)</label><input id="q_curr_prod" type="number" value="1200" min="1"></div>
+
+        <div class="section">
+          <div class="section-title" id="t_quick_section_today">Heutiger Prozess</div>
+          <div class="section-grid">
+            <div>
+              <label id="t_label_wage">Stundenlohn inkl. NK (CHF/h)</label>
+              <input id="q_wage" type="number" value="35" step="0.5" min="0">
+            </div>
+            <div>
+              <label id="t_label_currprod">Heutige Produktivitaet (m²/h)</label>
+              <input id="q_curr_prod" type="number" value="1200" min="1">
+            </div>
+          </div>
         </div>
-        <div class="row">
-          <div style="flex:1"><label id="t_label_opratio">Operator-Aufwand (% Fahrzeit)</label><input id="q_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1"></div>
-          <div style="flex:1"><label id="t_label_service">Service & Verschleiss p.a. (CHF)</label><input id="q_service" type="number" value="2500" min="0" step="50"></div>
+
+        <div class="section">
+          <div class="section-title" id="t_quick_section_robot">Roboter-Setup</div>
+          <div class="section-grid">
+            <div>
+              <label id="t_label_model">Modell</label>
+              <select id="q_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select>
+            </div>
+            <div>
+              <label id="t_label_util">Nutzungsgrad (Fahrzeit)</label>
+              <input id="q_util" type="number" value="0.85" step="0.01" min="0" max="1">
+              <div class="hint" id="t_hint_util">0.85 = 85%</div>
+            </div>
+            <div>
+              <label id="t_label_opratio">Operator-Aufwand (% Fahrzeit)</label>
+              <input id="q_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1">
+            </div>
+            <div>
+              <label id="t_label_service">Service & Verschleiss p.a. (CHF)</label>
+              <input id="q_service" type="number" value="2500" min="0" step="50">
+            </div>
+          </div>
         </div>
+
         <div class="row" style="flex-wrap:wrap; gap:10px">
           <button class="btn btn-primary" id="btn_quick">Berechnen</button>
           <button class="btn" id="btn_reset">Reset</button>
@@ -170,43 +202,102 @@
     <div class="grid tabpanel" id="panel-deep" style="display:none">
       <div class="col-8 card">
         <h2 id="t_deep_h2">Deep-Calc – Kostenfaktoren</h2>
-        <div class="grid">
-          <div class="col-6">
-            <h3 id="t_deep_now">Heutiger Prozess</h3>
-            <label id="t_label_d_currprod">Produktivitaet heute (m²/h)</label><input id="d_curr_prod" type="number" value="1200" min="1">
-            <label id="t_label_d_currmachine">Maschinenkosten heute p.a. (CHF)</label><input id="d_curr_machine" type="number" value="1500" min="0">
-            <label id="t_label_d_currcons">Verbrauch p.a. (CHF)</label><input id="d_curr_cons" type="number" value="1000" min="0">
-            <label id="t_label_d_currenergy">Energie p.a. (CHF)</label><input id="d_curr_energy" type="number" value="500" min="0">
-          </div>
-          <div class="col-6">
-            <h3 id="t_deep_robot">Roboterprozess</h3>
-            <div class="row">
-              <div style="flex:1"><label id="t_label_d_model">Modell</label><select id="d_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select></div>
-              <div style="flex:1"><label id="t_label_d_util">Nutzungsgrad (Fahrzeit)</label><input id="d_util" type="number" value="0.85" step="0.01" min="0" max="1"></div>
+        <div class="section">
+          <h3 id="t_deep_now" class="section-title">Heutiger Prozess</h3>
+          <div class="section-grid">
+            <div>
+              <label id="t_label_d_currprod">Produktivitaet heute (m²/h)</label>
+              <input id="d_curr_prod" type="number" value="1200" min="1">
             </div>
-            <label id="t_label_d_opratio">Operator-Aufwand (% Fahrzeit)</label><input id="d_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1">
-            <label id="t_label_d_service">Service & Verschleiss p.a. (CHF)</label><input id="d_service" type="number" value="2500" min="0" step="50">
-            <label id="t_label_d_energy">Energie p.a. (CHF)</label><input id="d_energy" type="number" value="350" min="0" step="10">
-            <label id="t_label_d_cons">Wasser/Chemie p.a. (CHF)</label><input id="d_cons" type="number" value="800" min="0" step="10">
-            <div class="row">
-              <div style="flex:1"><label id="t_label_d_price">Anschaffungspreis (CHF)</label><input id="d_price" type="number" value="35000" min="0"></div>
-              <div style="flex:1"><label id="t_label_d_life">Abschreibung (Jahre)</label><input id="d_life" type="number" value="5" min="1"></div>
+            <div>
+              <label id="t_label_d_currmachine">Maschinenkosten heute p.a. (CHF)</label>
+              <input id="d_curr_machine" type="number" value="1500" min="0">
             </div>
-            <label id="t_label_d_onboard">Onboarding (einmalig, CHF)</label><input id="d_onboard" type="number" value="1000" min="0">
-            <label id="t_label_d_finance">Finanzierung p.a. (CHF)</label><input id="d_finance" type="number" value="0" min="0">
+            <div>
+              <label id="t_label_d_currcons">Verbrauch p.a. (CHF)</label>
+              <input id="d_curr_cons" type="number" value="1000" min="0">
+            </div>
+            <div>
+              <label id="t_label_d_currenergy">Energie p.a. (CHF)</label>
+              <input id="d_curr_energy" type="number" value="500" min="0">
+            </div>
           </div>
         </div>
 
-        <h3 id="t_deep_profile">Einsatzprofil</h3>
-        <div class="grid">
-          <div class="col-4"><label id="t_label_d_area">Flaeche pro Reinigung (m²)</label><input id="d_area" type="number" value="10000" min="0"></div>
-          <div class="col-4"><label id="t_label_d_freq">Reinigungen/Woche</label><input id="d_freq" type="number" value="5" min="0" step="0.1"></div>
-          <div class="col-4"><label id="t_label_d_weeks">Wochen/Jahr</label><input id="d_weeks" type="number" value="52" min="1" max="53"></div>
+        <div class="section">
+          <h3 id="t_deep_robot" class="section-title">Roboterprozess</h3>
+          <div class="section-grid">
+            <div>
+              <label id="t_label_d_model">Modell</label>
+              <select id="d_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select>
+            </div>
+            <div>
+              <label id="t_label_d_util">Nutzungsgrad (Fahrzeit)</label>
+              <input id="d_util" type="number" value="0.85" step="0.01" min="0" max="1">
+            </div>
+            <div>
+              <label id="t_label_d_opratio">Operator-Aufwand (% Fahrzeit)</label>
+              <input id="d_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1">
+            </div>
+            <div>
+              <label id="t_label_d_service">Service & Verschleiss p.a. (CHF)</label>
+              <input id="d_service" type="number" value="2500" min="0" step="50">
+            </div>
+            <div>
+              <label id="t_label_d_energy">Energie p.a. (CHF)</label>
+              <input id="d_energy" type="number" value="350" min="0" step="10">
+            </div>
+            <div>
+              <label id="t_label_d_cons">Wasser/Chemie p.a. (CHF)</label>
+              <input id="d_cons" type="number" value="800" min="0" step="10">
+            </div>
+            <div>
+              <label id="t_label_d_price">Anschaffungspreis (CHF)</label>
+              <input id="d_price" type="number" value="35000" min="0">
+            </div>
+            <div>
+              <label id="t_label_d_life">Abschreibung (Jahre)</label>
+              <input id="d_life" type="number" value="5" min="1">
+            </div>
+            <div>
+              <label id="t_label_d_onboard">Onboarding (einmalig, CHF)</label>
+              <input id="d_onboard" type="number" value="1000" min="0">
+            </div>
+            <div>
+              <label id="t_label_d_finance">Finanzierung p.a. (CHF)</label>
+              <input id="d_finance" type="number" value="0" min="0">
+            </div>
+          </div>
         </div>
-        <div class="grid">
-          <div class="col-4"><label id="t_label_d_wage">Stundenlohn inkl. NK (CHF/h)</label><input id="d_wage" type="number" value="35" min="0" step="0.5"></div>
-          <div class="col-4"><label id="t_label_d_superv">Supervision (Min/1000 m²)</label><input id="d_superv_perk" type="number" value="3" min="0" step="0.5"></div>
-          <div class="col-4"><label id="t_label_d_downtime">Puffer Stoerungen (% Zeit)</label><input id="d_downtime" type="number" value="0.1" min="0" max="1" step="0.01"></div>
+
+        <div class="section">
+          <h3 id="t_deep_profile" class="section-title">Einsatzprofil</h3>
+          <div class="section-grid">
+            <div>
+              <label id="t_label_d_area">Flaeche pro Reinigung (m²)</label>
+              <input id="d_area" type="number" value="10000" min="0">
+            </div>
+            <div>
+              <label id="t_label_d_freq">Reinigungen/Woche</label>
+              <input id="d_freq" type="number" value="5" min="0" step="0.1">
+            </div>
+            <div>
+              <label id="t_label_d_weeks">Wochen/Jahr</label>
+              <input id="d_weeks" type="number" value="52" min="1" max="53">
+            </div>
+            <div>
+              <label id="t_label_d_wage">Stundenlohn inkl. NK (CHF/h)</label>
+              <input id="d_wage" type="number" value="35" min="0" step="0.5">
+            </div>
+            <div>
+              <label id="t_label_d_superv">Supervision (Min/1000 m²)</label>
+              <input id="d_superv_perk" type="number" value="3" min="0" step="0.5">
+            </div>
+            <div>
+              <label id="t_label_d_downtime">Puffer Stoerungen (% Zeit)</label>
+              <input id="d_downtime" type="number" value="0.1" min="0" max="1" step="0.01">
+            </div>
+          </div>
         </div>
 
         <div class="row" style="flex-wrap:wrap; gap:10px; margin-top:10px">
@@ -284,13 +375,13 @@
 <script>
   /* ====== i18n ====== */
   const STR = {
-    de:{title:"ROI-Calculator für Reinigungsroboter",subtitle:"Quick-Calc für einen schnellen Daumenwert. Deep-Calc für detaillierte TCO-Berechnung. Alle Werte in CHF (oder lokaler Währung) p.a.",tab_quick:"Quick-Calc",tab_deep:"Deep-Calc",tab_assumptions:"Annahmen",kpi_current_l:"Jaehrliche Gesamtkosten – Heute",kpi_robot_l:"Jaehrliche Gesamtkosten – Mit Roboter",kpi_savings_l:"Ersparnis p.a.",kpi_payback_l:"Payback",quick_h2:"Quick-Calc",label_model:"Modell",label_util:"Nutzungsgrad (Fahrzeit)",hint_util:"0.85 = 85%",label_area:"Flaeche pro Reinigung (m²)",label_freq:"Reinigungen/Woche",label_weeks:"Wochen/Jahr",label_wage:"Stundenlohn inkl. NK (CHF/h)",label_currprod:"Heutige Produktivitaet (m²/h)",label_opratio:"Operator-Aufwand (% Fahrzeit)",label_service:"Service & Verschleiss p.a. (CHF)",quick_hint:"Quick-Calc nimmt typische Energiekosten, Wasser/Chemie und Abschreibung automatisch an (siehe Tab Annahmen).",quick_result_h3:"Ergebnis (Quick)",deep_h2:"Deep-Calc – Kostenfaktoren",deep_now:"Heutiger Prozess",deep_robot:"Roboterprozess",deep_profile:"Einsatzprofil",deep_result_h3:"Ergebnis (Deep)",label_d_currprod:"Produktivitaet heute (m²/h)",label_d_currmachine:"Maschinenkosten heute p.a. (CHF)",label_d_currcons:"Verbrauch p.a. (CHF)",label_d_currenergy:"Energie p.a. (CHF)",label_d_model:"Modell",label_d_util:"Nutzungsgrad (Fahrzeit)",label_d_opratio:"Operator-Aufwand (% Fahrzeit)",label_d_service:"Service & Verschleiss p.a. (CHF)",label_d_energy:"Energie p.a.",label_d_cons:"Wasser/Chemie p.a.",label_d_price:"Anschaffungspreis (CHF)",label_d_life:"Abschreibung (Jahre)",label_d_onboard:"Onboarding (einmalig, CHF)",label_d_finance:"Finanzierung p.a. (CHF)",label_d_area:"Flaeche pro Reinigung (m²)",label_d_freq:"Reinigungen/Woche",label_d_weeks:"Wochen/Jahr",label_d_wage:"Stundenlohn inkl. NK (CHF/h)",label_d_superv:"Supervision (Min/1000 m²)",label_d_downtime:"Puffer Stoerungen (% Zeit)",assumptions_h2:"Annahmen & Defaults",assumptions_prod_h3:"Produktivitaet (m²/h)",assumptions_cost_h3:"Kosten/Verbrauch",label_a_currprod:"Heutiger Prozess",label_a_powerprice:"Strompreis (CHF/kWh)",label_a_powerperk:"Energie (kWh/1000 m²)",label_a_consperk:"Wasser/Chemie (CHF/1000 m²)",label_a_weeks:"Wochen/Jahr",label_a_life:"Abschreibung (Jahre)",label_a_service:"Service p.a. (CHF)",assumptions_batt_h3:"Akkulaufzeit & Laden",label_a_battruntime:"Akkulaufzeit Fahrzeit (h) – 100%→0%",label_a_chargetime:"Ladezeit bis 80% (h)",label_a_handlingm:"Handling beim M je Event (Min)",assumptions_strategy_h3:"Ladestrategie",label_a_xldock:"XL: Dock vorhanden?",label_a_windowratio:"Verfuegbare Fahrzeit pro Zyklus (80%→20%)",hint_windowratio:"Fahrzeit/Zyklus = Akkulaufzeit × 0.6",label_a_xlpartial:"XL Zwischenladen 20%→40% (Anteil von 40-min-Ladung)",hint_xlpartial:"≈ 10 Minuten",btn_calc_quick:"Berechnen",btn_reset:"Reset",btn_print:"PDF/Print",btn_calc_deep:"Berechnen (Deep)",btn_fill_from_quick:"Mit Quick-Werten fuellen",btn_apply_defaults:"Annahmen auf Quick/Deep anwenden",res_quick_none:"Noch keine Berechnung.",months:"Monate",charges_per_run:"Laden je Run",work_hours_today:"Arbeitsstunden heute",robot_drive_time:"Roboter Fahrzeit",charging:"Laden",operator:"Operator",annual_area:"Jaehrliche Flaeche",labour_today:"Arbeitskosten heute",with_robot:"mit Roboter",ewc_today:"Energie/Wasser/Chemie heute",service_dep:"Service/Abschreibung Roboter",annual_cost_today:"Jaehrliche Kosten heute",annual_cost_robot:"Jaehrliche Kosten Roboter",savings_pa:"Ersparnis p.a."},
-    en:{title:"ROI Calculator for Cleaning Robots",subtitle:"Quick Calc for a fast thumb value. Deep Calc for detailed TCO. All values per year (local currency).",tab_quick:"Quick Calc",tab_deep:"Deep Calc",tab_assumptions:"Assumptions",kpi_current_l:"Annual Total Cost – Today",kpi_robot_l:"Annual Total Cost – With Robot",kpi_savings_l:"Savings p.a.",kpi_payback_l:"Payback",quick_h2:"Quick Calc",label_model:"Model",label_util:"Utilization (drive time)",hint_util:"0.85 = 85%",label_area:"Area per cleaning (m²)",label_freq:"Cleanings/week",label_weeks:"Weeks/year",label_wage:"Hourly wage incl. overhead",label_currprod:"Current productivity (m²/h)",label_opratio:"Operator effort (% of drive time)",label_service:"Service & wear p.a.",quick_hint:"Quick Calc auto-fills energy, water/chemicals and depreciation (see Assumptions tab).",quick_result_h3:"Result (Quick)",deep_h2:"Deep Calc – Cost factors",deep_now:"Current process",deep_robot:"Robot process",deep_profile:"Usage profile",deep_result_h3:"Result (Deep)",label_d_currprod:"Current productivity (m²/h)",label_d_currmachine:"Machine cost today p.a.",label_d_currcons:"Consumables p.a.",label_d_currenergy:"Energy p.a.",label_d_model:"Model",label_d_util:"Utilization (drive time)",label_d_opratio:"Operator effort (% of drive time)",label_d_service:"Service & wear p.a.",label_d_energy:"Energy p.a.",label_d_cons:"Water/Chemicals p.a.",label_d_price:"Purchase price",label_d_life:"Depreciation (years)",label_d_onboard:"Onboarding (one-off)",label_d_finance:"Financing p.a.",label_d_area:"Area per cleaning (m²)",label_d_freq:"Cleanings/week",label_d_weeks:"Weeks/year",label_d_wage:"Hourly wage incl. overhead",label_d_superv:"Supervision (min/1000 m²)",label_d_downtime:"Disturbance buffer (% time)",assumptions_h2:"Assumptions & defaults",assumptions_prod_h3:"Productivity (m²/h)",assumptions_cost_h3:"Costs/consumption",label_a_currprod:"Current process",label_a_powerprice:"Power price (per kWh)",label_a_powerperk:"Energy (kWh/1000 m²)",label_a_consperk:"Water/Chemicals (per 1000 m²)",label_a_weeks:"Weeks/year",label_a_life:"Depreciation (years)",label_a_service:"Service p.a.",assumptions_batt_h3:"Battery & charging",label_a_battruntime:"Drive time (h) – 100%→0%",label_a_chargetime:"Charge to 80% (h)",label_a_handlingm:"M handling per event (min)",assumptions_strategy_h3:"Charging strategy",label_a_xldock:"XL: Dock available?",label_a_windowratio:"Usable drive window per cycle (80%→20%)",hint_windowratio:"Drive/cycle = runtime × 0.6",label_a_xlpartial:"XL partial charge 20%→40% (share of 40-min charge)",hint_xlpartial:"≈ 10 minutes",btn_calc_quick:"Calculate",btn_reset:"Reset",btn_print:"PDF/Print",btn_calc_deep:"Calculate (Deep)",btn_fill_from_quick:"Fill from Quick",btn_apply_defaults:"Apply assumptions to Quick/Deep",res_quick_none:"No calculation yet.",months:"months",charges_per_run:"Charges per run",work_hours_today:"Work hours today",robot_drive_time:"Robot drive time",charging:"Charging",operator:"Operator",annual_area:"Annual area",labour_today:"Labour cost today",with_robot:"with robot",ewc_today:"Energy/water/chemicals today",service_dep:"Service/depreciation robot",annual_cost_today:"Annual cost today",annual_cost_robot:"Annual cost robot",savings_pa:"Savings p.a."}
+    de:{title:"ROI-Calculator für Reinigungsroboter",subtitle:"Quick-Calc für einen schnellen Daumenwert. Deep-Calc für detaillierte TCO-Berechnung. Alle Werte in CHF (oder lokaler Währung) p.a.",tab_quick:"Quick-Calc",tab_deep:"Deep-Calc",tab_assumptions:"Annahmen",kpi_current_l:"Jaehrliche Gesamtkosten – Heute",kpi_robot_l:"Jaehrliche Gesamtkosten – Mit Roboter",kpi_savings_l:"Ersparnis p.a.",kpi_payback_l:"Payback",quick_h2:"Quick-Calc",quick_section_profile:"Einsatzprofil",quick_section_today:"Heutiger Prozess",quick_section_robot:"Roboter-Setup",label_model:"Modell",label_util:"Nutzungsgrad (Fahrzeit)",hint_util:"0.85 = 85%",label_area:"Flaeche pro Reinigung (m²)",label_freq:"Reinigungen/Woche",label_weeks:"Wochen/Jahr",label_wage:"Stundenlohn inkl. NK (CHF/h)",label_currprod:"Heutige Produktivitaet (m²/h)",label_opratio:"Operator-Aufwand (% Fahrzeit)",label_service:"Service & Verschleiss p.a. (CHF)",quick_hint:"Quick-Calc nimmt typische Energiekosten, Wasser/Chemie und Abschreibung automatisch an (siehe Tab Annahmen).",quick_result_h3:"Ergebnis (Quick)",deep_h2:"Deep-Calc – Kostenfaktoren",deep_now:"Heutiger Prozess",deep_robot:"Roboterprozess",deep_profile:"Einsatzprofil",deep_result_h3:"Ergebnis (Deep)",label_d_currprod:"Produktivitaet heute (m²/h)",label_d_currmachine:"Maschinenkosten heute p.a. (CHF)",label_d_currcons:"Verbrauch p.a. (CHF)",label_d_currenergy:"Energie p.a. (CHF)",label_d_model:"Modell",label_d_util:"Nutzungsgrad (Fahrzeit)",label_d_opratio:"Operator-Aufwand (% Fahrzeit)",label_d_service:"Service & Verschleiss p.a. (CHF)",label_d_energy:"Energie p.a.",label_d_cons:"Wasser/Chemie p.a.",label_d_price:"Anschaffungspreis (CHF)",label_d_life:"Abschreibung (Jahre)",label_d_onboard:"Onboarding (einmalig, CHF)",label_d_finance:"Finanzierung p.a. (CHF)",label_d_area:"Flaeche pro Reinigung (m²)",label_d_freq:"Reinigungen/Woche",label_d_weeks:"Wochen/Jahr",label_d_wage:"Stundenlohn inkl. NK (CHF/h)",label_d_superv:"Supervision (Min/1000 m²)",label_d_downtime:"Puffer Stoerungen (% Zeit)",assumptions_h2:"Annahmen & Defaults",assumptions_prod_h3:"Produktivitaet (m²/h)",assumptions_cost_h3:"Kosten/Verbrauch",label_a_currprod:"Heutiger Prozess",label_a_powerprice:"Strompreis (CHF/kWh)",label_a_powerperk:"Energie (kWh/1000 m²)",label_a_consperk:"Wasser/Chemie (CHF/1000 m²)",label_a_weeks:"Wochen/Jahr",label_a_life:"Abschreibung (Jahre)",label_a_service:"Service p.a. (CHF)",assumptions_batt_h3:"Akkulaufzeit & Laden",label_a_battruntime:"Akkulaufzeit Fahrzeit (h) – 100%→0%",label_a_chargetime:"Ladezeit bis 80% (h)",label_a_handlingm:"Handling beim M je Event (Min)",assumptions_strategy_h3:"Ladestrategie",label_a_xldock:"XL: Dock vorhanden?",label_a_windowratio:"Verfuegbare Fahrzeit pro Zyklus (80%→20%)",hint_windowratio:"Fahrzeit/Zyklus = Akkulaufzeit × 0.6",label_a_xlpartial:"XL Zwischenladen 20%→40% (Anteil von 40-min-Ladung)",hint_xlpartial:"≈ 10 Minuten",btn_calc_quick:"Berechnen",btn_reset:"Reset",btn_print:"PDF/Print",btn_calc_deep:"Berechnen (Deep)",btn_fill_from_quick:"Mit Quick-Werten fuellen",btn_apply_defaults:"Annahmen auf Quick/Deep anwenden",res_quick_none:"Noch keine Berechnung.",months:"Monate",charges_per_run:"Laden je Run",work_hours_today:"Arbeitsstunden heute",robot_drive_time:"Roboter Fahrzeit",charging:"Laden",operator:"Operator",annual_area:"Jaehrliche Flaeche",labour_today:"Arbeitskosten heute",with_robot:"mit Roboter",ewc_today:"Energie/Wasser/Chemie heute",service_dep:"Service/Abschreibung Roboter",annual_cost_today:"Jaehrliche Kosten heute",annual_cost_robot:"Jaehrliche Kosten Roboter",savings_pa:"Ersparnis p.a."},
+    en:{title:"ROI Calculator for Cleaning Robots",subtitle:"Quick Calc for a fast thumb value. Deep Calc for detailed TCO. All values per year (local currency).",tab_quick:"Quick Calc",tab_deep:"Deep Calc",tab_assumptions:"Assumptions",kpi_current_l:"Annual Total Cost – Today",kpi_robot_l:"Annual Total Cost – With Robot",kpi_savings_l:"Savings p.a.",kpi_payback_l:"Payback",quick_h2:"Quick Calc",quick_section_profile:"Usage profile",quick_section_today:"Current process",quick_section_robot:"Robot setup",label_model:"Model",label_util:"Utilization (drive time)",hint_util:"0.85 = 85%",label_area:"Area per cleaning (m²)",label_freq:"Cleanings/week",label_weeks:"Weeks/year",label_wage:"Hourly wage incl. overhead",label_currprod:"Current productivity (m²/h)",label_opratio:"Operator effort (% of drive time)",label_service:"Service & wear p.a.",quick_hint:"Quick Calc auto-fills energy, water/chemicals and depreciation (see Assumptions tab).",quick_result_h3:"Result (Quick)",deep_h2:"Deep Calc – Cost factors",deep_now:"Current process",deep_robot:"Robot process",deep_profile:"Usage profile",deep_result_h3:"Result (Deep)",label_d_currprod:"Current productivity (m²/h)",label_d_currmachine:"Machine cost today p.a.",label_d_currcons:"Consumables p.a.",label_d_currenergy:"Energy p.a.",label_d_model:"Model",label_d_util:"Utilization (drive time)",label_d_opratio:"Operator effort (% of drive time)",label_d_service:"Service & wear p.a.",label_d_energy:"Energy p.a.",label_d_cons:"Water/Chemicals p.a.",label_d_price:"Purchase price",label_d_life:"Depreciation (years)",label_d_onboard:"Onboarding (one-off)",label_d_finance:"Financing p.a.",label_d_area:"Area per cleaning (m²)",label_d_freq:"Cleanings/week",label_d_weeks:"Weeks/year",label_d_wage:"Hourly wage incl. overhead",label_d_superv:"Supervision (min/1000 m²)",label_d_downtime:"Disturbance buffer (% time)",assumptions_h2:"Assumptions & defaults",assumptions_prod_h3:"Productivity (m²/h)",assumptions_cost_h3:"Costs/consumption",label_a_currprod:"Current process",label_a_powerprice:"Power price (per kWh)",label_a_powerperk:"Energy (kWh/1000 m²)",label_a_consperk:"Water/Chemicals (per 1000 m²)",label_a_weeks:"Weeks/year",label_a_life:"Depreciation (years)",label_a_service:"Service p.a.",assumptions_batt_h3:"Battery & charging",label_a_battruntime:"Drive time (h) – 100%→0%",label_a_chargetime:"Charge to 80% (h)",label_a_handlingm:"M handling per event (min)",assumptions_strategy_h3:"Charging strategy",label_a_xldock:"XL: Dock available?",label_a_windowratio:"Usable drive window per cycle (80%→20%)",hint_windowratio:"Drive/cycle = runtime × 0.6",label_a_xlpartial:"XL partial charge 20%→40% (share of 40-min charge)",hint_xlpartial:"≈ 10 minutes",btn_calc_quick:"Calculate",btn_reset:"Reset",btn_print:"PDF/Print",btn_calc_deep:"Calculate (Deep)",btn_fill_from_quick:"Fill from Quick",btn_apply_defaults:"Apply assumptions to Quick/Deep",res_quick_none:"No calculation yet.",months:"months",charges_per_run:"Charges per run",work_hours_today:"Work hours today",robot_drive_time:"Robot drive time",charging:"Charging",operator:"Operator",annual_area:"Annual area",labour_today:"Labour cost today",with_robot:"with robot",ewc_today:"Energy/water/chemicals today",service_dep:"Service/depreciation robot",annual_cost_today:"Annual cost today",annual_cost_robot:"Annual cost robot",savings_pa:"Savings p.a."}
   };
 
   function applyI18N(lang){
     const S = STR[lang];
-    const ids = [["t_title","title"],["t_subtitle","subtitle"],["t_tab_quick","tab_quick"],["t_tab_deep","tab_deep"],["t_tab_assumptions","tab_assumptions"],["t_kpi_current_l","kpi_current_l"],["t_kpi_robot_l","kpi_robot_l"],["t_kpi_savings_l","kpi_savings_l"],["t_kpi_payback_l","kpi_payback_l"],["t_quick_h2","quick_h2"],["t_label_model","label_model"],["t_label_util","label_util"],["t_hint_util","hint_util"],["t_label_area","label_area"],["t_label_freq","label_freq"],["t_label_weeks","label_weeks"],["t_label_wage","label_wage"],["t_label_currprod","label_currprod"],["t_label_opratio","label_opratio"],["t_label_service","label_service"],["t_quick_hint","quick_hint"],["t_quick_result_h3","quick_result_h3"],["t_deep_h2","deep_h2"],["t_deep_now","deep_now"],["t_deep_robot","deep_robot"],["t_deep_profile","deep_profile"],["t_deep_result_h3","deep_result_h3"],["t_label_d_currprod","label_d_currprod"],["t_label_d_currmachine","label_d_currmachine"],["t_label_d_currcons","label_d_currcons"],["t_label_d_currenergy","label_d_currenergy"],["t_label_d_model","label_d_model"],["t_label_d_util","label_d_util"],["t_label_d_opratio","label_d_opratio"],["t_label_d_service","label_d_service"],["t_label_d_energy","label_d_energy"],["t_label_d_cons","label_d_cons"],["t_label_d_price","label_d_price"],["t_label_d_life","label_d_life"],["t_label_d_onboard","label_d_onboard"],["t_label_d_finance","label_d_finance"],["t_label_d_area","label_d_area"],["t_label_d_freq","label_d_freq"],["t_label_d_weeks","label_d_weeks"],["t_label_d_wage","label_d_wage"],["t_label_d_superv","label_d_superv"],["t_label_d_downtime","label_d_downtime"],["t_assumptions_h2","assumptions_h2"],["t_assumptions_prod_h3","assumptions_prod_h3"],["t_assumptions_cost_h3","assumptions_cost_h3"],["t_label_a_currprod","label_a_currprod"],["t_label_a_powerprice","label_a_powerprice"],["t_label_a_powerperk","label_a_powerperk"],["t_label_a_consperk","label_a_consperk"],["t_label_a_weeks","label_a_weeks"],["t_label_a_life","label_a_life"],["t_label_a_service","label_a_service"],["t_assumptions_batt_h3","assumptions_batt_h3"],["t_label_a_battruntime","label_a_battruntime"],["t_label_a_chargetime","label_a_chargetime"],["t_label_a_handlingm","label_a_handlingm"],["t_assumptions_strategy_h3","assumptions_strategy_h3"],["t_label_a_xldock","label_a_xldock"],["t_label_a_windowratio","label_a_windowratio"],["t_hint_windowratio","hint_windowratio"],["t_label_a_xlpartial","label_a_xlpartial"],["t_hint_xlpartial","hint_xlpartial"],["btn_quick","btn_calc_quick"],["btn_reset","btn_reset"],["btn_print","btn_print"],["btn_deep","btn_calc_deep"],["btn_fill_from_quick","btn_fill_from_quick"],["btn_apply_defaults","btn_apply_defaults"]];
+    const ids = [["t_title","title"],["t_subtitle","subtitle"],["t_tab_quick","tab_quick"],["t_tab_deep","tab_deep"],["t_tab_assumptions","tab_assumptions"],["t_kpi_current_l","kpi_current_l"],["t_kpi_robot_l","kpi_robot_l"],["t_kpi_savings_l","kpi_savings_l"],["t_kpi_payback_l","kpi_payback_l"],["t_quick_h2","quick_h2"],["t_quick_section_profile","quick_section_profile"],["t_quick_section_today","quick_section_today"],["t_quick_section_robot","quick_section_robot"],["t_label_model","label_model"],["t_label_util","label_util"],["t_hint_util","hint_util"],["t_label_area","label_area"],["t_label_freq","label_freq"],["t_label_weeks","label_weeks"],["t_label_wage","label_wage"],["t_label_currprod","label_currprod"],["t_label_opratio","label_opratio"],["t_label_service","label_service"],["t_quick_hint","quick_hint"],["t_quick_result_h3","quick_result_h3"],["t_deep_h2","deep_h2"],["t_deep_now","deep_now"],["t_deep_robot","deep_robot"],["t_deep_profile","deep_profile"],["t_deep_result_h3","deep_result_h3"],["t_label_d_currprod","label_d_currprod"],["t_label_d_currmachine","label_d_currmachine"],["t_label_d_currcons","label_d_currcons"],["t_label_d_currenergy","label_d_currenergy"],["t_label_d_model","label_d_model"],["t_label_d_util","label_d_util"],["t_label_d_opratio","label_d_opratio"],["t_label_d_service","label_d_service"],["t_label_d_energy","label_d_energy"],["t_label_d_cons","label_d_cons"],["t_label_d_price","label_d_price"],["t_label_d_life","label_d_life"],["t_label_d_onboard","label_d_onboard"],["t_label_d_finance","label_d_finance"],["t_label_d_area","label_d_area"],["t_label_d_freq","label_d_freq"],["t_label_d_weeks","label_d_weeks"],["t_label_d_wage","label_d_wage"],["t_label_d_superv","label_d_superv"],["t_label_d_downtime","label_d_downtime"],["t_assumptions_h2","assumptions_h2"],["t_assumptions_prod_h3","assumptions_prod_h3"],["t_assumptions_cost_h3","assumptions_cost_h3"],["t_label_a_currprod","label_a_currprod"],["t_label_a_powerprice","label_a_powerprice"],["t_label_a_powerperk","label_a_powerperk"],["t_label_a_consperk","label_a_consperk"],["t_label_a_weeks","label_a_weeks"],["t_label_a_life","label_a_life"],["t_label_a_service","label_a_service"],["t_assumptions_batt_h3","assumptions_batt_h3"],["t_label_a_battruntime","label_a_battruntime"],["t_label_a_chargetime","label_a_chargetime"],["t_label_a_handlingm","label_a_handlingm"],["t_assumptions_strategy_h3","assumptions_strategy_h3"],["t_label_a_xldock","label_a_xldock"],["t_label_a_windowratio","label_a_windowratio"],["t_hint_windowratio","hint_windowratio"],["t_label_a_xlpartial","label_a_xlpartial"],["t_hint_xlpartial","hint_xlpartial"],["btn_quick","btn_calc_quick"],["btn_reset","btn_reset"],["btn_print","btn_print"],["btn_deep","btn_calc_deep"],["btn_fill_from_quick","btn_fill_from_quick"],["btn_apply_defaults","btn_apply_defaults"]];
     ids.forEach(([id,key]) => { const el=document.getElementById(id); if(el) el.textContent=S[key]; });
     const qr=document.getElementById("quick_results"); if(qr && (qr.textContent.trim()==="Noch keine Berechnung." || qr.textContent.trim()==="No calculation yet.")) qr.textContent=S.res_quick_none;
     document.documentElement.lang=lang; localStorage.setItem("roi_lang",lang);
