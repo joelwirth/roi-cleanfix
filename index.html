@@ -21,10 +21,10 @@
       --border:#223044;
       --radius:14px;
       --shadow: 0 8px 30px rgba(0,0,0,.25);
-      --gap:24px;
-      --pad:18px;
+      --gap:32px;
+      --pad:22px;
       --focus: 0 0 0 3px rgba(45,212,191,.45);
-      --section-gap:18px;
+      --section-gap:24px;
     }
     body.light{
       --bg:#f6f8fb;
@@ -50,38 +50,39 @@
     h3 { font-size: clamp(16px, 2.2vw, 18px); color: var(--muted); }
     .wrap { max-width: 1160px; margin: 0 auto; padding: var(--pad); }
     .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); align-items: start; }
-    .card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: var(--pad); box-shadow: var(--shadow); display:flex; flex-direction:column; gap: var(--section-gap); }
+    .card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: calc(var(--pad) + 4px); box-shadow: var(--shadow); display:flex; flex-direction:column; gap: var(--section-gap); }
     .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-12{grid-column:span 12}
     label { display:block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
     input, select { width: 100%; padding: 12px 14px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); font-size: 14px; }
     input:focus, select:focus, button:focus { outline: none; box-shadow: var(--focus); }
-    .row { display:flex; gap: 12px; align-items:center; }
-    .section { background: var(--surface); border:1px dashed var(--border); border-radius: 12px; padding: 14px; margin: 0; display:flex; flex-direction:column; gap:12px; }
+    .row { display:flex; gap: 16px; align-items:center; }
+    .section { background: var(--surface); border:1px dashed var(--border); border-radius: 12px; padding: 18px 20px; margin: 0; display:flex; flex-direction:column; gap:18px; }
     .section + .section { margin-top: var(--section-gap); }
-    .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 12px; }
-    .section-grid { display:grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
+    .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+    .section-grid { display:grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
     .section-grid .row { display: contents; }
     .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
     .muted { color: var(--muted); }
     .btn { padding: 11px 16px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); cursor:pointer; font-weight:600;}
     .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none; color:#06261e; }
-    .tabs { display:flex; gap:10px; margin: 14px 0 12px; flex-wrap:wrap; }
+    .tabs { display:flex; gap:12px; margin: 20px 0 18px; flex-wrap:wrap; }
     .tab { cursor:pointer; padding: 10px 14px; border-radius: 999px; border:1px solid var(--border); color: var(--muted); background: var(--surface); }
     .tab.active { background: var(--accent); color:#06261e; border:none; font-weight:800; }
     .kpis { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--section-gap); }
-    .kpi { background:var(--surface); border:1px dashed var(--border); border-radius: 16px; padding: 14px; }
+    .kpi { background:var(--surface); border:1px dashed var(--border); border-radius: 16px; padding: 18px; }
     .kpi .v { font-size: clamp(22px, 3.2vw, 30px); font-weight:800; letter-spacing:-0.02em }
     .kpi .l { font-size: 12px; color: var(--muted); }
     .save-good { color: var(--good); }
     .save-bad { color: var(--bad); }
-    .foot { display:flex; justify-content: space-between; align-items: center; gap:10px; flex-wrap: wrap; color: var(--muted); padding-top: 8px; }
+    .foot { display:flex; justify-content: space-between; align-items: center; gap:12px; flex-wrap: wrap; color: var(--muted); padding-top: 16px; }
     .small { font-size: 12px; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
 
     /* Floating Actions */
-    .fab { position: sticky; top: 12px; display:flex; justify-content:flex-end; gap:12px; z-index:999; margin-bottom: 8px;}
-    .fab button { width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:var(--card); box-shadow: var(--shadow); cursor:pointer; color:var(--text); font-weight:700; display:grid; place-items:center; }
-    .fab button span { font-size: 20px; }
+    .fab { position: sticky; top: 18px; display:flex; justify-content:flex-end; gap:14px; z-index:999; margin-bottom: 12px;}
+    .fab button { width:52px; height:52px; border-radius:50%; border:1px solid var(--border); background:var(--card); box-shadow: var(--shadow); cursor:pointer; color:var(--text); font-weight:700; display:grid; place-items:center; transition:transform .12s ease; }
+    .fab button .icon, .fab button svg { width:28px; height:28px; display:block; }
+    .fab button svg { stroke:currentColor; stroke-width:1.7; }
     .fab button:hover { transform: translateY(-1px); }
 
     /* Responsive */
@@ -101,7 +102,7 @@
       }
       body{ background:#fff; color:#000; font-size:12pt; }
       .wrap{ max-width:none; padding:0 12mm; }
-      .grid{ gap:16px; }
+      .grid{ gap:22px; }
       .card, .kpi { box-shadow: none; background:#fff; border:1px solid var(--border); color:#000; }
       .fab, .tabs, .btn, .fab button, #btn_print { display:none !important; }
       .tabpanel { display:block !important; }
@@ -114,8 +115,17 @@
   <div class="wrap">
     <!-- Floating buttons -->
     <div class="fab">
-      <button id="btn_lang" title="Sprache wechseln" aria-label="Sprache wechseln"><span aria-hidden="true">🌐</span></button>
-      <button id="btn_theme" title="Theme" aria-label="Theme umschalten">☾</button>
+      <button id="btn_lang" title="Sprache wechseln" aria-label="Sprache wechseln">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 5.75C3 4.784 3.784 4 4.75 4h6.5c.966 0 1.75.784 1.75 1.75v12.5A1.75 1.75 0 0 1 11.25 20h-6.5A1.75 1.75 0 0 1 3 18.25V5.75Z" fill="currentColor" stroke="none"></path>
+          <path d="M8 7h2m-2 3h2m-2 3h2M6 7h.01M6 10h.01M6 13h.01" stroke-linecap="round" fill="none"></path>
+          <path d="M13.5 7h5.75A1.75 1.75 0 0 1 21 8.75V18a2 2 0 0 1-2 2h-3.75" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+          <path d="M13.5 11h7M17 21.5c.69 0 1.25-.56 1.25-1.25S17.69 19 17 19s-1.25.56-1.25 1.25S16.31 21.5 17 21.5Z" fill="none"></path>
+        </svg>
+      </button>
+      <button id="btn_theme" title="Theme" aria-label="Theme umschalten">
+        <span id="icon_theme" class="icon" aria-hidden="true"></span>
+      </button>
     </div>
 
     <!-- Header -->
@@ -201,7 +211,7 @@
           </div>
         </div>
 
-        <div class="row" style="flex-wrap:wrap; gap:10px">
+        <div class="row" style="flex-wrap:wrap; gap:16px">
           <button class="btn btn-primary" id="btn_quick">Berechnen</button>
           <button class="btn" id="btn_reset">Reset</button>
           <button class="btn" id="btn_print">PDF/Print</button>
@@ -317,7 +327,7 @@
           </div>
         </div>
 
-        <div class="row" style="flex-wrap:wrap; gap:10px">
+        <div class="row" style="flex-wrap:wrap; gap:16px">
           <button class="btn btn-primary" id="btn_deep">Berechnen (Deep)</button>
           <button class="btn" id="btn_fill_from_quick">Mit Quick-Werten fuellen</button>
         </div>
@@ -336,7 +346,7 @@
         <div class="grid">
           <div class="col-6">
             <h3 id="t_assumptions_prod_h3">Produktivitaet (m²/h)</h3>
-            <div class="row" style="gap:14px; align-items:flex-end">
+            <div class="row" style="gap:18px; align-items:flex-end">
               <div style="flex:1"><label id="t_label_a_currprod">Heutiger Prozess</label><input id="a_curr_prod" type="number" value="1200"></div>
               <div style="flex:1"><label>RA-660 Navi XL</label><input id="a_xl_prod" type="number" value="1250"></div>
               <div style="flex:1"><label>RA-660 Navi M</label><input id="a_m_prod" type="number" value="1250"></div>
@@ -344,12 +354,12 @@
           </div>
           <div class="col-6">
             <h3 id="t_assumptions_cost_h3">Kosten/Verbrauch</h3>
-            <div class="row" style="gap:14px; align-items:flex-end">
+            <div class="row" style="gap:18px; align-items:flex-end">
               <div style="flex:1"><label id="t_label_a_powerprice">Strompreis (CHF/kWh)</label><input id="a_power_price" type="number" value="0.25" step="0.01"></div>
               <div style="flex:1"><label id="t_label_a_powerperk">Energie (kWh/1000 m²)</label><input id="a_power_perk" type="number" value="2.0" step="0.1"></div>
               <div style="flex:1"><label id="t_label_a_consperk">Wasser/Chemie (CHF/1000 m²)</label><input id="a_cons_perk" type="number" value="6.0" step="0.5"></div>
             </div>
-            <div class="row" style="gap:14px; margin-top:8px">
+            <div class="row" style="gap:18px; margin-top:12px">
               <div style="flex:1"><label id="t_label_a_weeks">Wochen/Jahr</label><input id="a_weeks" type="number" value="52"></div>
               <div style="flex:1"><label id="t_label_a_life">Abschreibung (Jahre)</label><input id="a_life" type="number" value="5"></div>
               <div style="flex:1"><label id="t_label_a_service">Service p.a. (CHF)</label><input id="a_service" type="number" value="2500"></div>
@@ -358,7 +368,7 @@
 
           <div class="col-12">
             <h3 id="t_assumptions_batt_h3">Akkulaufzeit & Laden</h3>
-            <div class="row" style="gap:14px; align-items:flex-end">
+            <div class="row" style="gap:18px; align-items:flex-end">
               <div style="flex:1"><label id="t_label_a_battruntime">Akkulaufzeit Fahrzeit (h) – 100%→0%</label><input id="a_batt_runtime" type="number" value="3.0" step="0.1"></div>
               <div style="flex:1"><label id="t_label_a_chargetime">Ladezeit bis 80% (h)</label><input id="a_charge_time" type="number" value="0.667" step="0.01"></div>
               <div style="flex:1"><label id="t_label_a_handlingm">Handling beim M je Event (Min)</label><input id="a_handling_m" type="number" value="5" step="1"></div>
@@ -367,7 +377,7 @@
 
           <div class="col-12">
             <h3 id="t_assumptions_strategy_h3">Ladestrategie</h3>
-            <div class="row" style="gap:14px; align-items:flex-end">
+            <div class="row" style="gap:18px; align-items:flex-end">
               <div style="flex:1"><label id="t_label_a_xldock">XL: Dock vorhanden?</label>
                 <select id="a_xl_dock">
                   <option value="1" selected>Ja (autonomes Zwischenladen)</option>
@@ -396,6 +406,11 @@
     en:{title:"ROI Calculator for Cleaning Robots",subtitle:"Quick Calc for a fast thumb value. Deep Calc for detailed TCO. All values per year (local currency).",tab_quick:"Quick Calc",tab_deep:"Deep Calc",tab_assumptions:"Assumptions",kpi_current_l:"Annual Total Cost – Today",kpi_robot_l:"Annual Total Cost – With Robot",kpi_savings_l:"Savings p.a.",kpi_payback_l:"Payback",quick_h2:"Quick Calc",quick_section_profile:"Usage profile",quick_section_today:"Current process",quick_section_robot:"Robot setup",label_model:"Model",label_util:"Utilization (drive time)",hint_util:"0.85 = 85%",label_area:"Area per cleaning (m²)",label_freq:"Cleanings/week",label_weeks:"Weeks/year",label_wage:"Hourly wage incl. overhead",label_currprod:"Current productivity (m²/h)",label_opratio:"Operator effort (% of drive time)",label_service:"Service & wear p.a.",quick_hint:"Quick Calc auto-fills energy, water/chemicals and depreciation (see Assumptions tab).",quick_result_h3:"Result (Quick)",deep_h2:"Deep Calc – Cost factors",deep_now:"Current process",deep_robot:"Robot process",deep_profile:"Usage profile",deep_result_h3:"Result (Deep)",label_d_currprod:"Current productivity (m²/h)",label_d_currmachine:"Machine cost today p.a.",label_d_currcons:"Consumables p.a.",label_d_currenergy:"Energy p.a.",label_d_model:"Model",label_d_util:"Utilization (drive time)",label_d_opratio:"Operator effort (% of drive time)",label_d_service:"Service & wear p.a.",label_d_energy:"Energy p.a.",label_d_cons:"Water/Chemicals p.a.",label_d_price:"Purchase price",label_d_life:"Depreciation (years)",label_d_onboard:"Onboarding (one-off)",label_d_finance:"Financing p.a.",label_d_area:"Area per cleaning (m²)",label_d_freq:"Cleanings/week",label_d_weeks:"Weeks/year",label_d_wage:"Hourly wage incl. overhead",label_d_superv:"Supervision (min/1000 m²)",label_d_downtime:"Disturbance buffer (% time)",assumptions_h2:"Assumptions & defaults",assumptions_prod_h3:"Productivity (m²/h)",assumptions_cost_h3:"Costs/consumption",label_a_currprod:"Current process",label_a_powerprice:"Power price (per kWh)",label_a_powerperk:"Energy (kWh/1000 m²)",label_a_consperk:"Water/Chemicals (per 1000 m²)",label_a_weeks:"Weeks/year",label_a_life:"Depreciation (years)",label_a_service:"Service p.a.",assumptions_batt_h3:"Battery & charging",label_a_battruntime:"Drive time (h) – 100%→0%",label_a_chargetime:"Charge to 80% (h)",label_a_handlingm:"M handling per event (min)",assumptions_strategy_h3:"Charging strategy",label_a_xldock:"XL: Dock available?",label_a_windowratio:"Usable drive window per cycle (80%→20%)",hint_windowratio:"Drive/cycle = runtime × 0.6",label_a_xlpartial:"XL partial charge 20%→40% (share of 40-min charge)",hint_xlpartial:"≈ 10 minutes",btn_calc_quick:"Calculate",btn_reset:"Reset",btn_print:"PDF/Print",btn_calc_deep:"Calculate (Deep)",btn_fill_from_quick:"Fill from Quick",btn_apply_defaults:"Apply assumptions to Quick/Deep",res_quick_none:"No calculation yet.",months:"months",charges_per_run:"Charges per run",work_hours_today:"Work hours today",robot_drive_time:"Robot drive time",charging:"Charging",operator:"Operator",annual_area:"Annual area",labour_today:"Labour cost today",with_robot:"with robot",ewc_today:"Energy/water/chemicals today",service_dep:"Service/depreciation robot",annual_cost_today:"Annual cost today",annual_cost_robot:"Annual cost robot",savings_pa:"Savings p.a."}
   };
 
+  const THEME_ICONS = {
+    sun:`<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414m0-12.728L7.05 7.05m11.314 11.314 1.414 1.414"></path></svg>`,
+    moon:`<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 0 1 11.21 3 7 7 0 1 0 21 12.79Z"></path></svg>`
+  };
+
   function detectInitialLanguage(){
     const stored = localStorage.getItem("roi_lang");
     if(stored && STR[stored]) return stored;
@@ -414,6 +429,23 @@
     return detectInitialLanguage();
   }
 
+  function setThemeIcon(theme){
+    const holder = document.getElementById('icon_theme');
+    if(holder){
+      holder.innerHTML = theme === 'light' ? THEME_ICONS.sun : THEME_ICONS.moon;
+    }
+    const btn = document.getElementById('btn_theme');
+    if(btn){
+      const lang = getActiveLang();
+      const isLight = theme === 'light';
+      const label = isLight
+        ? (lang === 'de' ? 'Dunklen Modus aktivieren' : 'Switch to dark mode')
+        : (lang === 'de' ? 'Hellen Modus aktivieren' : 'Switch to light mode');
+      btn.title = label;
+      btn.setAttribute('aria-label', label);
+    }
+  }
+
   function applyI18N(lang){
     const langKey = STR[lang] ? lang : 'de';
     const S = STR[langKey];
@@ -427,10 +459,17 @@
       langBtn.title = label;
       langBtn.setAttribute('aria-label', label);
     }
+    const currentTheme = document.body.classList.contains('light') ? 'light' : 'dark';
+    setThemeIcon(currentTheme);
   }
 
   /* ====== Theme ====== */
-  function applyTheme(theme){ const b=document.body; if(theme==="light"){ b.classList.add("light"); document.getElementById("btn_theme").textContent="☀︎"; } else { b.classList.remove("light"); document.getElementById("btn_theme").textContent="☾"; } localStorage.setItem("roi_theme",theme); }
+  function applyTheme(theme){
+    const b=document.body;
+    if(theme==="light"){ b.classList.add("light"); } else { b.classList.remove("light"); }
+    setThemeIcon(theme);
+    localStorage.setItem("roi_theme",theme);
+  }
 
   document.getElementById("btn_lang").addEventListener("click", ()=>{ const curr=getActiveLang(); applyI18N(curr==="de"?"en":"de"); });
   document.getElementById("btn_theme").addEventListener("click", ()=>{ const curr=localStorage.getItem("roi_theme")||"dark"; applyTheme(curr==="dark"?"light":"dark"); });
