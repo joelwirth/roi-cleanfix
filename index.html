@@ -62,6 +62,8 @@
     .section-grid { display:grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
     .section-grid .row { display: contents; }
     .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .results { display:flex; flex-direction:column; gap: 18px; line-height: 1.5; }
+    .results hr { width: 100%; border: none; border-top:1px solid var(--border); margin: 4px 0; }
     .muted { color: var(--muted); }
     .btn { padding: 11px 16px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); cursor:pointer; font-weight:600;}
     .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none; color:#06261e; }
@@ -221,7 +223,7 @@
 
       <div class="col-6 card">
         <h3 id="t_quick_result_h3">Ergebnis (Quick)</h3>
-        <div id="quick_results" class="small muted">Noch keine Berechnung.</div>
+        <div id="quick_results" class="results small muted"><div>Noch keine Berechnung.</div></div>
       </div>
     </div>
 
@@ -335,7 +337,7 @@
 
       <div class="col-4 card">
         <h3 id="t_deep_result_h3">Ergebnis (Deep)</h3>
-        <div id="deep_results" class="small muted">Noch keine Berechnung.</div>
+        <div id="deep_results" class="results small muted"><div>Noch keine Berechnung.</div></div>
       </div>
     </div>
 
@@ -624,7 +626,7 @@
 
     document.getElementById('deep_results').innerHTML = `
       <div class="mono">Input: ${(m2PerYear).toLocaleString(numberLocale)} m²/Jahr, Prod(Robot) effektiv ≈ ${(Math.round(prodRobot)).toLocaleString(numberLocale)} m²/h</div>
-      <hr style="border-color:var(--border)">
+      <hr>
       <div>${S.work_hours_today}: <b>${fmtH(hoursToday)}</b> &nbsp;|&nbsp; ${S.robot_drive_time}: <b>${fmtH(moveHours)}</b> (+ ${S.charging}: ${fmtH(extraDowntimeHours)}) &nbsp;|&nbsp; ${S.operator}: <b>${fmtH(operatorHours)}</b></div>
       <div>${S.charges_per_run}: <b>${ch.events}</b>×, ~<b>${Number(ch.perEvent).toLocaleString(numberLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b> h/${(lang==="de"?"Event":"event")}</div>
       <div>${S.annual_cost_today}: <b>${fmtCHF(totalToday)}</b></div>
