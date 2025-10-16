@@ -21,9 +21,10 @@
       --border:#223044;
       --radius:14px;
       --shadow: 0 8px 30px rgba(0,0,0,.25);
-      --gap:20px;
+      --gap:24px;
       --pad:18px;
       --focus: 0 0 0 3px rgba(45,212,191,.45);
+      --section-gap:18px;
     }
     body.light{
       --bg:#f6f8fb;
@@ -49,15 +50,16 @@
     h3 { font-size: clamp(16px, 2.2vw, 18px); color: var(--muted); }
     .wrap { max-width: 1160px; margin: 0 auto; padding: var(--pad); }
     .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); align-items: start; }
-    .card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: var(--pad); box-shadow: var(--shadow); }
+    .card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: var(--pad); box-shadow: var(--shadow); display:flex; flex-direction:column; gap: var(--section-gap); }
     .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-12{grid-column:span 12}
     label { display:block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
     input, select { width: 100%; padding: 12px 14px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); font-size: 14px; }
     input:focus, select:focus, button:focus { outline: none; box-shadow: var(--focus); }
     .row { display:flex; gap: 12px; align-items:center; }
-    .section { background: var(--surface); border:1px dashed var(--border); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+    .section { background: var(--surface); border:1px dashed var(--border); border-radius: 12px; padding: 14px; margin: 0; display:flex; flex-direction:column; gap:12px; }
+    .section + .section { margin-top: var(--section-gap); }
     .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 12px; }
-    .section-grid { display:grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
+    .section-grid { display:grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
     .section-grid .row { display: contents; }
     .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
     .muted { color: var(--muted); }
@@ -66,7 +68,7 @@
     .tabs { display:flex; gap:10px; margin: 14px 0 12px; flex-wrap:wrap; }
     .tab { cursor:pointer; padding: 10px 14px; border-radius: 999px; border:1px solid var(--border); color: var(--muted); background: var(--surface); }
     .tab.active { background: var(--accent); color:#06261e; border:none; font-weight:800; }
-    .kpis { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+    .kpis { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--section-gap); }
     .kpi { background:var(--surface); border:1px dashed var(--border); border-radius: 16px; padding: 14px; }
     .kpi .v { font-size: clamp(22px, 3.2vw, 30px); font-weight:800; letter-spacing:-0.02em }
     .kpi .l { font-size: 12px; color: var(--muted); }
@@ -79,6 +81,7 @@
     /* Floating Actions */
     .fab { position: sticky; top: 12px; display:flex; justify-content:flex-end; gap:12px; z-index:999; margin-bottom: 8px;}
     .fab button { width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:var(--card); box-shadow: var(--shadow); cursor:pointer; color:var(--text); font-weight:700; display:grid; place-items:center; }
+    .fab button span { font-size: 20px; }
     .fab button:hover { transform: translateY(-1px); }
 
     /* Responsive */
@@ -87,9 +90,23 @@
       .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
     @media print{
-      body{ background:#fff; color:#000 }
-      .card, .kpi { box-shadow: none; }
-      .fab { display:none }
+      :root{
+        --bg:#fff;
+        --card:#fff;
+        --surface:#fff;
+        --text:#000;
+        --muted:#333;
+        --border:#d0d6de;
+        --shadow:none;
+      }
+      body{ background:#fff; color:#000; font-size:12pt; }
+      .wrap{ max-width:none; padding:0 12mm; }
+      .grid{ gap:16px; }
+      .card, .kpi { box-shadow: none; background:#fff; border:1px solid var(--border); color:#000; }
+      .fab, .tabs, .btn, .fab button, #btn_print { display:none !important; }
+      .tabpanel { display:block !important; }
+      .kpi { break-inside: avoid; }
+      h2, h3 { color:#000; }
     }
   </style>
 </head>
@@ -97,8 +114,8 @@
   <div class="wrap">
     <!-- Floating buttons -->
     <div class="fab">
-      <button id="btn_lang" title="Language">A</button>
-      <button id="btn_theme" title="Theme">☾</button>
+      <button id="btn_lang" title="Sprache wechseln" aria-label="Sprache wechseln"><span aria-hidden="true">🌐</span></button>
+      <button id="btn_theme" title="Theme" aria-label="Theme umschalten">☾</button>
     </div>
 
     <!-- Header -->
@@ -300,7 +317,7 @@
           </div>
         </div>
 
-        <div class="row" style="flex-wrap:wrap; gap:10px; margin-top:10px">
+        <div class="row" style="flex-wrap:wrap; gap:10px">
           <button class="btn btn-primary" id="btn_deep">Berechnen (Deep)</button>
           <button class="btn" id="btn_fill_from_quick">Mit Quick-Werten fuellen</button>
         </div>
@@ -362,7 +379,7 @@
             </div>
           </div>
         </div>
-        <div class="row" style="margin-top:10px"><button class="btn" id="btn_apply_defaults">Annahmen auf Quick/Deep anwenden</button></div>
+        <div class="row"><button class="btn" id="btn_apply_defaults">Annahmen auf Quick/Deep anwenden</button></div>
       </div>
     </div>
 
@@ -379,23 +396,58 @@
     en:{title:"ROI Calculator for Cleaning Robots",subtitle:"Quick Calc for a fast thumb value. Deep Calc for detailed TCO. All values per year (local currency).",tab_quick:"Quick Calc",tab_deep:"Deep Calc",tab_assumptions:"Assumptions",kpi_current_l:"Annual Total Cost – Today",kpi_robot_l:"Annual Total Cost – With Robot",kpi_savings_l:"Savings p.a.",kpi_payback_l:"Payback",quick_h2:"Quick Calc",quick_section_profile:"Usage profile",quick_section_today:"Current process",quick_section_robot:"Robot setup",label_model:"Model",label_util:"Utilization (drive time)",hint_util:"0.85 = 85%",label_area:"Area per cleaning (m²)",label_freq:"Cleanings/week",label_weeks:"Weeks/year",label_wage:"Hourly wage incl. overhead",label_currprod:"Current productivity (m²/h)",label_opratio:"Operator effort (% of drive time)",label_service:"Service & wear p.a.",quick_hint:"Quick Calc auto-fills energy, water/chemicals and depreciation (see Assumptions tab).",quick_result_h3:"Result (Quick)",deep_h2:"Deep Calc – Cost factors",deep_now:"Current process",deep_robot:"Robot process",deep_profile:"Usage profile",deep_result_h3:"Result (Deep)",label_d_currprod:"Current productivity (m²/h)",label_d_currmachine:"Machine cost today p.a.",label_d_currcons:"Consumables p.a.",label_d_currenergy:"Energy p.a.",label_d_model:"Model",label_d_util:"Utilization (drive time)",label_d_opratio:"Operator effort (% of drive time)",label_d_service:"Service & wear p.a.",label_d_energy:"Energy p.a.",label_d_cons:"Water/Chemicals p.a.",label_d_price:"Purchase price",label_d_life:"Depreciation (years)",label_d_onboard:"Onboarding (one-off)",label_d_finance:"Financing p.a.",label_d_area:"Area per cleaning (m²)",label_d_freq:"Cleanings/week",label_d_weeks:"Weeks/year",label_d_wage:"Hourly wage incl. overhead",label_d_superv:"Supervision (min/1000 m²)",label_d_downtime:"Disturbance buffer (% time)",assumptions_h2:"Assumptions & defaults",assumptions_prod_h3:"Productivity (m²/h)",assumptions_cost_h3:"Costs/consumption",label_a_currprod:"Current process",label_a_powerprice:"Power price (per kWh)",label_a_powerperk:"Energy (kWh/1000 m²)",label_a_consperk:"Water/Chemicals (per 1000 m²)",label_a_weeks:"Weeks/year",label_a_life:"Depreciation (years)",label_a_service:"Service p.a.",assumptions_batt_h3:"Battery & charging",label_a_battruntime:"Drive time (h) – 100%→0%",label_a_chargetime:"Charge to 80% (h)",label_a_handlingm:"M handling per event (min)",assumptions_strategy_h3:"Charging strategy",label_a_xldock:"XL: Dock available?",label_a_windowratio:"Usable drive window per cycle (80%→20%)",hint_windowratio:"Drive/cycle = runtime × 0.6",label_a_xlpartial:"XL partial charge 20%→40% (share of 40-min charge)",hint_xlpartial:"≈ 10 minutes",btn_calc_quick:"Calculate",btn_reset:"Reset",btn_print:"PDF/Print",btn_calc_deep:"Calculate (Deep)",btn_fill_from_quick:"Fill from Quick",btn_apply_defaults:"Apply assumptions to Quick/Deep",res_quick_none:"No calculation yet.",months:"months",charges_per_run:"Charges per run",work_hours_today:"Work hours today",robot_drive_time:"Robot drive time",charging:"Charging",operator:"Operator",annual_area:"Annual area",labour_today:"Labour cost today",with_robot:"with robot",ewc_today:"Energy/water/chemicals today",service_dep:"Service/depreciation robot",annual_cost_today:"Annual cost today",annual_cost_robot:"Annual cost robot",savings_pa:"Savings p.a."}
   };
 
+  function detectInitialLanguage(){
+    const stored = localStorage.getItem("roi_lang");
+    if(stored && STR[stored]) return stored;
+    const browserPref = (navigator.languages && navigator.languages.length ? navigator.languages[0] : (navigator.language || navigator.userLanguage || ""));
+    if(browserPref){
+      const lower = browserPref.toLowerCase();
+      if(lower.startsWith("en")) return "en";
+      if(lower.startsWith("de")) return "de";
+    }
+    return "de";
+  }
+
+  function getActiveLang(){
+    const docLang = document.documentElement.lang;
+    if(docLang && STR[docLang]) return docLang;
+    return detectInitialLanguage();
+  }
+
   function applyI18N(lang){
-    const S = STR[lang];
+    const langKey = STR[lang] ? lang : 'de';
+    const S = STR[langKey];
     const ids = [["t_title","title"],["t_subtitle","subtitle"],["t_tab_quick","tab_quick"],["t_tab_deep","tab_deep"],["t_tab_assumptions","tab_assumptions"],["t_kpi_current_l","kpi_current_l"],["t_kpi_robot_l","kpi_robot_l"],["t_kpi_savings_l","kpi_savings_l"],["t_kpi_payback_l","kpi_payback_l"],["t_quick_h2","quick_h2"],["t_quick_section_profile","quick_section_profile"],["t_quick_section_today","quick_section_today"],["t_quick_section_robot","quick_section_robot"],["t_label_model","label_model"],["t_label_util","label_util"],["t_hint_util","hint_util"],["t_label_area","label_area"],["t_label_freq","label_freq"],["t_label_weeks","label_weeks"],["t_label_wage","label_wage"],["t_label_currprod","label_currprod"],["t_label_opratio","label_opratio"],["t_label_service","label_service"],["t_quick_hint","quick_hint"],["t_quick_result_h3","quick_result_h3"],["t_deep_h2","deep_h2"],["t_deep_now","deep_now"],["t_deep_robot","deep_robot"],["t_deep_profile","deep_profile"],["t_deep_result_h3","deep_result_h3"],["t_label_d_currprod","label_d_currprod"],["t_label_d_currmachine","label_d_currmachine"],["t_label_d_currcons","label_d_currcons"],["t_label_d_currenergy","label_d_currenergy"],["t_label_d_model","label_d_model"],["t_label_d_util","label_d_util"],["t_label_d_opratio","label_d_opratio"],["t_label_d_service","label_d_service"],["t_label_d_energy","label_d_energy"],["t_label_d_cons","label_d_cons"],["t_label_d_price","label_d_price"],["t_label_d_life","label_d_life"],["t_label_d_onboard","label_d_onboard"],["t_label_d_finance","label_d_finance"],["t_label_d_area","label_d_area"],["t_label_d_freq","label_d_freq"],["t_label_d_weeks","label_d_weeks"],["t_label_d_wage","label_d_wage"],["t_label_d_superv","label_d_superv"],["t_label_d_downtime","label_d_downtime"],["t_assumptions_h2","assumptions_h2"],["t_assumptions_prod_h3","assumptions_prod_h3"],["t_assumptions_cost_h3","assumptions_cost_h3"],["t_label_a_currprod","label_a_currprod"],["t_label_a_powerprice","label_a_powerprice"],["t_label_a_powerperk","label_a_powerperk"],["t_label_a_consperk","label_a_consperk"],["t_label_a_weeks","label_a_weeks"],["t_label_a_life","label_a_life"],["t_label_a_service","label_a_service"],["t_assumptions_batt_h3","assumptions_batt_h3"],["t_label_a_battruntime","label_a_battruntime"],["t_label_a_chargetime","label_a_chargetime"],["t_label_a_handlingm","label_a_handlingm"],["t_assumptions_strategy_h3","assumptions_strategy_h3"],["t_label_a_xldock","label_a_xldock"],["t_label_a_windowratio","label_a_windowratio"],["t_hint_windowratio","hint_windowratio"],["t_label_a_xlpartial","label_a_xlpartial"],["t_hint_xlpartial","hint_xlpartial"],["btn_quick","btn_calc_quick"],["btn_reset","btn_reset"],["btn_print","btn_print"],["btn_deep","btn_calc_deep"],["btn_fill_from_quick","btn_fill_from_quick"],["btn_apply_defaults","btn_apply_defaults"]];
     ids.forEach(([id,key]) => { const el=document.getElementById(id); if(el) el.textContent=S[key]; });
     const qr=document.getElementById("quick_results"); if(qr && (qr.textContent.trim()==="Noch keine Berechnung." || qr.textContent.trim()==="No calculation yet.")) qr.textContent=S.res_quick_none;
-    document.documentElement.lang=lang; localStorage.setItem("roi_lang",lang);
+    document.documentElement.lang=langKey; localStorage.setItem("roi_lang",langKey);
+    const langBtn=document.getElementById("btn_lang");
+    if(langBtn){
+      const label = langKey === 'de' ? 'Sprache wechseln' : 'Switch language';
+      langBtn.title = label;
+      langBtn.setAttribute('aria-label', label);
+    }
   }
 
   /* ====== Theme ====== */
   function applyTheme(theme){ const b=document.body; if(theme==="light"){ b.classList.add("light"); document.getElementById("btn_theme").textContent="☀︎"; } else { b.classList.remove("light"); document.getElementById("btn_theme").textContent="☾"; } localStorage.setItem("roi_theme",theme); }
 
-  document.getElementById("btn_lang").addEventListener("click", ()=>{ const curr=localStorage.getItem("roi_lang")||"de"; applyI18N(curr==="de"?"en":"de"); });
+  document.getElementById("btn_lang").addEventListener("click", ()=>{ const curr=getActiveLang(); applyI18N(curr==="de"?"en":"de"); });
   document.getElementById("btn_theme").addEventListener("click", ()=>{ const curr=localStorage.getItem("roi_theme")||"dark"; applyTheme(curr==="dark"?"light":"dark"); });
 
   /* ====== Math Helpers ====== */
-  const fmtCHF = (v) => isFinite(v) ? new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF', maximumFractionDigits: 0 }).format(v) : '–';
-  const fmtH = (v) => isFinite(v) ? (Math.round(v*10)/10).toLocaleString('de-CH') + ' h' : '–';
+  const fmtCHF = (v) => {
+    if(!isFinite(v)) return '–';
+    const lang = getActiveLang();
+    const locale = lang === 'en' ? 'en-GB' : 'de-CH';
+    return new Intl.NumberFormat(locale, { style: 'currency', currency: 'CHF', maximumFractionDigits: 0 }).format(v);
+  };
+  const fmtH = (v) => {
+    if(!isFinite(v)) return '–';
+    const lang = getActiveLang();
+    const locale = lang === 'en' ? 'en-GB' : 'de-CH';
+    return (Math.round(v*10)/10).toLocaleString(locale) + ' h';
+  };
   const clamp = (v, mn, mx) => Math.min(mx, Math.max(mn, v));
 
   const defaults = { curr_prod:1200, prod:{XL:1250, M:1250}, weeks:52, power_price:0.25, power_perk:2.0, cons_perk:6.0, service:2500, life:5, batt_runtime:3.0, charge_time:0.667, handling_m_min:5, xl_dock:1, window_ratio:0.6, xl_partial_ratio:0.25 };
@@ -414,12 +466,13 @@
 
   /* ====== KPI Updater ====== */
   function setKPIs(currCost, robotCost, savings, paybackMonths){
-    const lang = localStorage.getItem("roi_lang") || "de";
+    const lang = getActiveLang();
     const S = STR[lang];
+    const locale = lang === 'en' ? 'en-GB' : 'de-CH';
     document.getElementById('kpi_current_cost').textContent = fmtCHF(currCost);
     document.getElementById('kpi_robot_cost').textContent = fmtCHF(robotCost);
     const sv = document.getElementById('kpi_savings'); sv.textContent = fmtCHF(savings); sv.className = 'v ' + (savings >= 0 ? 'save-good' : 'save-bad');
-    document.getElementById('kpi_payback').textContent = (paybackMonths && isFinite(paybackMonths) && paybackMonths > 0) ? (Math.round(paybackMonths*10)/10).toLocaleString('de-CH') + ' ' + S.months : '–';
+    document.getElementById('kpi_payback').textContent = (paybackMonths && isFinite(paybackMonths) && paybackMonths > 0) ? (Math.round(paybackMonths*10)/10).toLocaleString(locale) + ' ' + S.months : '–';
   }
 
   /* ====== Tabs ====== */
@@ -431,8 +484,9 @@
   /* ====== Quick Calc ====== */
   function quickCalc(){
     const a = getAnnahmen();
-    const lang = localStorage.getItem("roi_lang") || "de";
+    const lang = getActiveLang();
     const S = STR[lang];
+    const numberLocale = lang === 'en' ? 'en-GB' : 'de-CH';
     const model = document.getElementById('q_model').value;
     const util = clamp(+document.getElementById('q_util').value || 0.85, 0, 1);
     const area = +document.getElementById('q_area').value || 0;
@@ -476,10 +530,12 @@
 
     setKPIs(totalToday, totalRobot, savings, paybackMonths);
 
+    const perEventHours = Number(ch.perEvent).toLocaleString(numberLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
     document.getElementById('quick_results').innerHTML = `
-      <div>${S.annual_area}: <b>${(m2PerYear).toLocaleString('de-CH')}</b> m²</div>
-      <div>${S.work_hours_today}: <b>${fmtH(hoursToday)}</b> &nbsp;|&nbsp; ${S.robot_drive_time}: <b>${fmtH(moveHours)}</b> (+ ${S.charging}: ${fmtH(extraDowntimeHours)}) &nbsp;|&nbsp; ${S.operator}: <b>${fmtH(operatorHours)}</b></div>
-      <div>${S.charges_per_run}: <b>${ch.events}</b>×, ~<b>${(ch.perEvent).toFixed(2)}</b> h/${(lang==="de"?"Event":"event")}</div>
+      <div>${S.annual_area}: <b>${(m2PerYear).toLocaleString(numberLocale)}</b> m²</div>
+      <div>${S.work_hours_today}: <b>${fmtH(hoursToday)}</b> &nbsp;|&nbsp; ${S.robot_drive_time}: <b>${fmtH(moveHours)}</b> (+ ${S.charging}: <b>${fmtH(extraDowntimeHours)}</b>) &nbsp;|&nbsp; ${S.operator}: <b>${fmtH(operatorHours)}</b></div>
+      <div>${S.charges_per_run}: <b>${ch.events}</b>×, ~<b>${perEventHours}</b> h/${(lang==="de"?"Event":"event")}</div>
       <div>${S.labour_today}: <b>${fmtCHF(laborToday)}</b> &nbsp;|&nbsp; ${S.with_robot}: <b>${fmtCHF(laborRobot)}</b></div>
       <div>${S.ewc_today}: <b>${fmtCHF(energyToday+consToday)}</b> &nbsp;|&nbsp; ${S.with_robot}: <b>${fmtCHF(energyRobot+consRobot)}</b></div>
       <div>${S.service_dep}: <b>${fmtCHF(service+depreciation)}</b></div>
@@ -492,8 +548,9 @@
   /* ====== Deep Calc ====== */
   function deepCalc(){
     const a = getAnnahmen();
-    const lang = localStorage.getItem("roi_lang") || "de";
+    const lang = getActiveLang();
     const S = STR[lang];
+    const numberLocale = lang === 'en' ? 'en-GB' : 'de-CH';
 
     const d = { area:+document.getElementById('d_area').value||0, freq:+document.getElementById('d_freq').value||0, weeks:+document.getElementById('d_weeks').value||a.weeks, wage:+document.getElementById('d_wage').value||0, curr_prod:+document.getElementById('d_curr_prod').value||a.curr_prod, curr_machine:+document.getElementById('d_curr_machine').value||0, curr_cons:+document.getElementById('d_curr_cons').value||0, curr_energy:+document.getElementById('d_curr_energy').value||0, model:document.getElementById('d_model').value, util:clamp(+document.getElementById('d_util').value||0.85,0,1), op_ratio:clamp(+document.getElementById('d_op_ratio').value||0.2,0,1), service:+document.getElementById('d_service').value||a.service, energy:+document.getElementById('d_energy').value||0, cons:+document.getElementById('d_cons').value||0, price:+document.getElementById('d_price').value||(document.getElementById('d_model').value==='XL'?35000:32000), life:+document.getElementById('d_life').value||a.life, onboard:+document.getElementById('d_onboard').value||0, finance:+document.getElementById('d_finance').value||0, superv_perk:+document.getElementById('d_superv_perk').value||3, downtime:clamp(+document.getElementById('d_downtime').value||0.1,0,1) };
 
@@ -527,13 +584,13 @@
     setKPIs(totalToday, totalRobot, savings, paybackMonths);
 
     document.getElementById('deep_results').innerHTML = `
-      <div class="mono">Input: ${(m2PerYear).toLocaleString('de-CH')} m²/Jahr, Prod(Robot) effektiv ≈ ${(Math.round(prodRobot)).toLocaleString('de-CH')} m²/h</div>
+      <div class="mono">Input: ${(m2PerYear).toLocaleString(numberLocale)} m²/Jahr, Prod(Robot) effektiv ≈ ${(Math.round(prodRobot)).toLocaleString(numberLocale)} m²/h</div>
       <hr style="border-color:var(--border)">
       <div>${S.work_hours_today}: <b>${fmtH(hoursToday)}</b> &nbsp;|&nbsp; ${S.robot_drive_time}: <b>${fmtH(moveHours)}</b> (+ ${S.charging}: ${fmtH(extraDowntimeHours)}) &nbsp;|&nbsp; ${S.operator}: <b>${fmtH(operatorHours)}</b></div>
-      <div>${S.charges_per_run}: <b>${ch.events}</b>×, ~<b>${(ch.perEvent).toFixed(2)}</b> h/${(lang==="de"?"Event":"event")}</div>
+      <div>${S.charges_per_run}: <b>${ch.events}</b>×, ~<b>${Number(ch.perEvent).toLocaleString(numberLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b> h/${(lang==="de"?"Event":"event")}</div>
       <div>${S.annual_cost_today}: <b>${fmtCHF(totalToday)}</b></div>
       <div>${S.annual_cost_robot}: <b>${fmtCHF(totalRobot)}</b> (ROI: ${isFinite(roiPct)? Math.round(roiPct):'–'}%)</div>
-      <div>${S.savings_pa}: <b>${fmtCHF(savings)}</b> &nbsp;|&nbsp; Payback: <b>${(paybackMonths && isFinite(paybackMonths))? (Math.round(paybackMonths*10)/10).toLocaleString('de-CH')+' '+STR[lang].months:'–'}</b></div>
+      <div>${S.savings_pa}: <b>${fmtCHF(savings)}</b> &nbsp;|&nbsp; Payback: <b>${(paybackMonths && isFinite(paybackMonths))? (Math.round(paybackMonths*10)/10).toLocaleString(numberLocale)+' '+STR[lang].months:'–'}</b></div>
     `;
   }
   document.getElementById('btn_deep').addEventListener('click', deepCalc);
@@ -560,7 +617,7 @@
   });
 
   /* Init */
-  applyI18N(localStorage.getItem("roi_lang")||"de");
+  applyI18N(detectInitialLanguage());
   applyTheme(localStorage.getItem("roi_theme")||"dark");
 </script>
 </body>
