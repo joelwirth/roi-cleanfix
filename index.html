@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="de">
 <head>
@@ -7,398 +6,692 @@
   <title>ROI-Calculator – Reinigungsroboter</title>
   <style>
     /* ====== Design Tokens ====== */
-    :root{
-      --bg:#0b0f14;
-      --card:#111826;
-      --surface:#0e141b;
-      --muted:#9fb0c3;
-      --accent:#19b394;
-      --accent-2:#2dd4bf;
-      --text:#eaf2fb;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-      --good:#22c55e;
-      --border:#223044;
-      --radius:14px;
-      --shadow: 0 8px 30px rgba(0,0,0,.25);
-      --gap:32px;
-      --pad:22px;
-      --focus: 0 0 0 3px rgba(45,212,191,.45);
-      --section-gap:24px;
+    :root {
+      --bg: #05090f;
+      --card: rgba(12, 18, 27, 0.88);
+      --surface: rgba(16, 24, 36, 0.82);
+      --surface-soft: rgba(18, 28, 42, 0.64);
+      --surface-strong: rgba(10, 16, 24, 0.88);
+      --muted: #9fb0c3;
+      --accent: #19b394;
+      --accent-2: #2dd4bf;
+      --text: #ecf3fe;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --good: #22c55e;
+      --border: rgba(80, 100, 126, 0.28);
+      --radius: 18px;
+      --shadow: 0 28px 60px rgba(5, 10, 30, 0.55);
+      --focus: 0 0 0 3px rgba(45, 212, 191, .35);
+      --section-gap: 22px;
+      --transition: 180ms ease;
     }
-    body.light{
-      --bg:#f6f8fb;
-      --card:#ffffff;
-      --surface:#ffffff;
-      --muted:#5a6b7f;
-      --accent:#19b394;
-      --accent-2:#0bbda8;
-      --text:#08111c;
-      --warn:#b45309;
-      --bad:#b91c1c;
-      --good:#15803d;
-      --border:#d7e0ea;
-      --shadow: 0 8px 30px rgba(2,12,28,.08);
+
+    body.light {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --surface: #ffffff;
+      --surface-soft: #f1f4f9;
+      --surface-strong: #ffffff;
+      --muted: #516072;
+      --accent: #19b394;
+      --accent-2: #0bbda8;
+      --text: #0f1623;
+      --warn: #b45309;
+      --bad: #b91c1c;
+      --good: #15803d;
+      --border: rgba(12, 18, 27, 0.12);
+      --shadow: 0 24px 50px rgba(15, 22, 35, 0.08);
+      --focus: 0 0 0 3px rgba(25, 179, 148, .35);
     }
 
     /* ====== Global ====== */
-    *{box-sizing:border-box}
-    html, body { background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.4; }
-    h1,h2,h3 { margin: .2rem 0 .6rem; font-weight: 800; letter-spacing: -0.02em; }
-    h1 { font-size: clamp(22px, 3.6vw, 34px); }
-    h2 { font-size: clamp(18px, 2.6vw, 24px); color: var(--accent-2); }
-    h3 { font-size: clamp(16px, 2.2vw, 18px); color: var(--muted); }
-    .wrap { max-width: 1160px; margin: 0 auto; padding: var(--pad); }
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--gap); align-items: start; }
-    .card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: calc(var(--pad) + 4px); box-shadow: var(--shadow); display:flex; flex-direction:column; gap: var(--section-gap); }
-    .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-12{grid-column:span 12}
-    label { display:block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-    input, select { width: 100%; padding: 12px 14px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); font-size: 14px; }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(70% 60% at 12% 12%, rgba(56, 233, 197, 0.18), transparent),
+        radial-gradient(55% 45% at 88% 0%, rgba(96, 165, 250, 0.18), transparent),
+        var(--bg);
+      z-index: -2;
+    }
+
+    body.light::before {
+      background:
+        radial-gradient(65% 55% at 0% 0%, rgba(25, 179, 148, 0.16), transparent),
+        radial-gradient(70% 55% at 100% 0%, rgba(79, 70, 229, 0.12), transparent),
+        #f4f7fb;
+    }
+
+    h1, h2, h3 { margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+    h1 { font-size: clamp(28px, 4.2vw, 40px); }
+    h2 { font-size: clamp(20px, 3vw, 28px); color: var(--accent-2); }
+    h3 { font-size: clamp(16px, 2.2vw, 20px); color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+
+    p { margin: 0; }
+
+    a { color: inherit; }
+
+    .app-shell {
+      width: min(1200px, 100%);
+      padding: clamp(26px, 4vw, 48px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(24px, 4vw, 40px);
+      position: relative;
+      z-index: 0;
+    }
+
+    .hero { display: flex; flex-direction: column; gap: 18px; }
+
+    .hero__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero__titles { max-width: 720px; display: flex; flex-direction: column; gap: 10px; }
+
+    .subtitle { color: var(--muted); font-size: clamp(14px, 2.2vw, 16px); line-height: 1.6; }
+
+    .hero__actions { display: flex; gap: 12px; }
+
+    .icon-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), background var(--transition), border-color var(--transition), color var(--transition);
+    }
+
+    .icon-btn svg { width: 26px; height: 26px; stroke: currentColor; stroke-width: 1.7; fill: none; }
+
+    .icon-btn:hover { transform: translateY(-2px); }
+
+    .icon-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px;
+      background: var(--surface-soft);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      width: fit-content;
+      box-shadow: var(--shadow);
+    }
+
+    .tab {
+      cursor: pointer;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #032d22;
+      box-shadow: 0 18px 36px rgba(25, 179, 148, 0.35);
+      border-color: transparent;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.35fr) minmax(0, 1fr);
+      gap: clamp(24px, 4vw, 36px);
+      align-items: start;
+    }
+
+    .sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: clamp(12px, 5vw, 48px); }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(22px, 3vw, 28px);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .panel__title { margin: 0; font-size: 15px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; }
+
+    .kpis { display: grid; gap: 16px; }
+
+    .kpi {
+      background: var(--surface-soft);
+      border: 1px solid rgba(90, 115, 150, 0.22);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .kpi .l { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+    .kpi .v { font-size: clamp(22px, 3vw, 32px); font-weight: 800; letter-spacing: -0.02em; }
+
+    .content { display: flex; flex-direction: column; gap: clamp(24px, 3vw, 32px); }
+
+    .tabpanel { display: none; flex-direction: column; gap: clamp(24px, 3vw, 32px); }
+
+    #panel-quick { display: flex; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: clamp(20px, 3vw, 28px);
+      align-items: start;
+    }
+
+    .section-group { display: flex; flex-direction: column; gap: var(--section-gap); }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid rgba(90, 115, 150, 0.22);
+      border-radius: calc(var(--radius) - 4px);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .section h3 { margin: 0; color: var(--muted); font-size: 13px; letter-spacing: 0.18em; }
+
+    .field-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .field-grid--compact { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+
+    label { display: block; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(90, 115, 150, 0.22);
+      background: var(--surface-strong);
+      color: var(--text);
+      font-size: 14px;
+      transition: border-color var(--transition), background var(--transition), color var(--transition);
+    }
+
     input:focus, select:focus, button:focus { outline: none; box-shadow: var(--focus); }
-    .row { display:flex; gap: 16px; align-items:center; }
-    .section { background: var(--surface); border:1px dashed var(--border); border-radius: 12px; padding: 18px 20px; margin: 0; display:flex; flex-direction:column; gap:18px; }
-    .section + .section { margin-top: var(--section-gap); }
-    .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
-    .section-grid { display:grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
-    .section-grid .row { display: contents; }
+
     .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
-    .results { display:flex; flex-direction:column; gap: 18px; line-height: 1.5; }
-    .results hr { width: 100%; border: none; border-top:1px solid var(--border); margin: 4px 0; }
+
+    .form-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .btn {
+      padding: 11px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(90, 115, 150, 0.22);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform var(--transition), background var(--transition), border-color var(--transition);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: #032d22;
+      box-shadow: 0 18px 36px rgba(25, 179, 148, 0.28);
+    }
+
+    .results { display: flex; flex-direction: column; gap: 18px; line-height: 1.55; }
+    .results hr { width: 100%; border: none; border-top: 1px solid rgba(90, 115, 150, 0.22); margin: 6px 0; }
     .muted { color: var(--muted); }
-    .btn { padding: 11px 16px; border-radius: 12px; border:1px solid var(--border); background:var(--surface); color: var(--text); cursor:pointer; font-weight:600;}
-    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none; color:#06261e; }
-    .tabs { display:flex; gap:12px; margin: 20px 0 18px; flex-wrap:wrap; }
-    .tab { cursor:pointer; padding: 10px 14px; border-radius: 999px; border:1px solid var(--border); color: var(--muted); background: var(--surface); }
-    .tab.active { background: var(--accent); color:#06261e; border:none; font-weight:800; }
-    .kpis { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--section-gap); }
-    .kpi { background:var(--surface); border:1px dashed var(--border); border-radius: 16px; padding: 18px; }
-    .kpi .v { font-size: clamp(22px, 3.2vw, 30px); font-weight:800; letter-spacing:-0.02em }
-    .kpi .l { font-size: 12px; color: var(--muted); }
-    .save-good { color: var(--good); }
-    .save-bad { color: var(--bad); }
-    .foot { display:flex; justify-content: space-between; align-items: center; gap:12px; flex-wrap: wrap; color: var(--muted); padding-top: 16px; }
     .small { font-size: 12px; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
 
-    /* Floating Actions */
-    .fab { position: sticky; top: 18px; display:flex; justify-content:flex-end; gap:14px; z-index:999; margin-bottom: 12px;}
-    .fab button { width:52px; height:52px; border-radius:50%; border:1px solid var(--border); background:var(--card); box-shadow: var(--shadow); cursor:pointer; color:var(--text); font-weight:700; display:grid; place-items:center; transition:transform .12s ease; }
-    .fab button .icon, .fab button svg { width:28px; height:28px; display:block; }
-    .fab button svg { stroke:currentColor; stroke-width:1.7; }
-    .fab button:hover { transform: translateY(-1px); }
+    .save-good { color: var(--good); }
+    .save-bad { color: var(--bad); }
 
-    /* Responsive */
-    @media (max-width: 920px){
-      .col-3,.col-4,.col-6,.col-8,.col-9,.col-12{grid-column:span 12}
-      .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .panel--note { gap: 14px; font-size: 13px; color: var(--muted); }
+
+    footer.foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+      padding-top: 12px;
     }
-    @media print{
-      :root{
-        --bg:#fff;
-        --card:#fff;
-        --surface:#fff;
-        --text:#000;
-        --muted:#333;
-        --border:#d0d6de;
-        --shadow:none;
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1100px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; }
+      .tabs { width: 100%; justify-content: space-between; }
+    }
+
+    @media (max-width: 640px) {
+      .hero__top { flex-direction: column-reverse; align-items: flex-start; }
+      .hero__actions { align-self: flex-end; }
+      .tabs { padding: 10px; }
+      .tab { flex: 1 1 auto; text-align: center; }
+    }
+
+    /* ===== Print ===== */
+    @media print {
+      :root {
+        --bg: #ffffff;
+        --card: #ffffff;
+        --surface: #ffffff;
+        --surface-soft: #ffffff;
+        --text: #000000;
+        --muted: #333333;
+        --border: #d0d6de;
+        --shadow: none;
       }
-      body{ background:#fff; color:#000; font-size:12pt; }
-      .wrap{ max-width:none; padding:0 12mm; }
-      .grid{ gap:22px; }
-      .card, .kpi { box-shadow: none; background:#fff; border:1px solid var(--border); color:#000; }
-      .fab, .tabs, .btn, .fab button, #btn_print { display:none !important; }
-      .tabpanel { display:block !important; }
-      .kpi { break-inside: avoid; }
-      h2, h3 { color:#000; }
+
+      body, body::before { background: #ffffff !important; }
+      body { color: #000; font-size: 12pt; }
+      .app-shell { width: 100%; padding: 0 12mm; }
+      .tabs, .hero__actions, .btn, #btn_print { display: none !important; }
+      .tabpanel { display: block !important; }
+      .layout { display: block; }
+      .panel, .kpi { box-shadow: none; background: #fff; border: 1px solid var(--border); }
+      h2, h3 { color: #000; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- Floating buttons -->
-    <div class="fab">
-      <button id="btn_lang" title="Sprache wechseln" aria-label="Sprache wechseln">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 5.75C3 4.784 3.784 4 4.75 4h6.5c.966 0 1.75.784 1.75 1.75v12.5A1.75 1.75 0 0 1 11.25 20h-6.5A1.75 1.75 0 0 1 3 18.25V5.75Z" fill="currentColor" stroke="none"></path>
-          <path d="M8 7h2m-2 3h2m-2 3h2M6 7h.01M6 10h.01M6 13h.01" stroke-linecap="round" fill="none"></path>
-          <path d="M13.5 7h5.75A1.75 1.75 0 0 1 21 8.75V18a2 2 0 0 1-2 2h-3.75" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
-          <path d="M13.5 11h7M17 21.5c.69 0 1.25-.56 1.25-1.25S17.69 19 17 19s-1.25.56-1.25 1.25S16.31 21.5 17 21.5Z" fill="none"></path>
-        </svg>
-      </button>
-      <button id="btn_theme" title="Theme" aria-label="Theme umschalten">
-        <span id="icon_theme" class="icon" aria-hidden="true"></span>
-      </button>
-    </div>
-
-    <!-- Header -->
-    <h1 id="t_title">ROI-Calculator für Reinigungsroboter</h1>
-    <div class="hint" id="t_subtitle">Quick-Calc für einen schnellen Daumenwert. Deep-Calc für detaillierte TCO-Berechnung. Alle Werte in CHF (oder lokaler Währung) p.a.</div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" data-tab="quick" id="t_tab_quick">Quick-Calc</div>
-      <div class="tab" data-tab="deep" id="t_tab_deep">Deep-Calc</div>
-      <div class="tab" data-tab="assumptions" id="t_tab_assumptions">Annahmen</div>
-    </div>
-
-    <!-- KPIs -->
-    <div class="grid">
-      <div class="col-12 card">
-        <div class="kpis">
-          <div class="kpi"><div class="l" id="t_kpi_current_l">Jaehrliche Gesamtkosten – Heute</div><div id="kpi_current_cost" class="v">–</div></div>
-          <div class="kpi"><div class="l" id="t_kpi_robot_l">Jaehrliche Gesamtkosten – Mit Roboter</div><div id="kpi_robot_cost" class="v">–</div></div>
-          <div class="kpi"><div class="l" id="t_kpi_savings_l">Ersparnis p.a.</div><div id="kpi_savings" class="v">–</div></div>
-          <div class="kpi"><div class="l" id="t_kpi_payback_l">Payback</div><div id="kpi_payback" class="v">–</div></div>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero__top">
+        <div class="hero__titles">
+          <h1 id="t_title">ROI-Calculator für Reinigungsroboter</h1>
+          <p class="subtitle" id="t_subtitle">Quick-Calc für einen schnellen Daumenwert. Deep-Calc für detaillierte TCO-Berechnung. Alle Werte in CHF (oder lokaler Währung) p.a.</p>
+        </div>
+        <div class="hero__actions">
+          <button class="icon-btn" id="btn_lang" title="Sprache wechseln" aria-label="Sprache wechseln">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5.75C3 4.784 3.784 4 4.75 4h6.5c.966 0 1.75.784 1.75 1.75v12.5A1.75 1.75 0 0 1 11.25 20h-6.5A1.75 1.75 0 0 1 3 18.25V5.75Z" fill="currentColor" stroke="none"></path>
+              <path d="M8 7h2m-2 3h2m-2 3h2M6 7h.01M6 10h.01M6 13h.01" stroke-linecap="round"></path>
+              <path d="M13.5 7h5.75A1.75 1.75 0 0 1 21 8.75V18a2 2 0 0 1-2 2h-3.75" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M13.5 11h7M17 21.5c.69 0 1.25-.56 1.25-1.25S17.69 19 17 19s-1.25.56-1.25 1.25S16.31 21.5 17 21.5Z" fill="none"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" id="btn_theme" title="Theme" aria-label="Theme umschalten">
+            <span id="icon_theme" class="icon" aria-hidden="true"></span>
+          </button>
         </div>
       </div>
-    </div>
+      <nav class="tabs" role="tablist">
+        <div class="tab active" data-tab="quick" id="t_tab_quick">Quick-Calc</div>
+        <div class="tab" data-tab="deep" id="t_tab_deep">Deep-Calc</div>
+        <div class="tab" data-tab="assumptions" id="t_tab_assumptions">Annahmen</div>
+      </nav>
+    </header>
 
-    <!-- Quick -->
-    <div class="grid tabpanel" id="panel-quick">
-      <div class="col-6 card">
-        <h2 id="t_quick_h2">Quick-Calc</h2>
-
-        <div class="section">
-          <div class="section-title" id="t_quick_section_profile">Einsatzprofil</div>
-          <div class="section-grid">
-            <div>
-              <label id="t_label_area">Flaeche pro Reinigung (m²)</label>
-              <input id="q_area" type="number" value="10000" min="0">
+    <div class="layout">
+      <aside class="sidebar">
+        <section class="panel panel--summary">
+          <span class="panel__title">KPIs</span>
+          <div class="kpis">
+            <div class="kpi">
+              <div class="l" id="t_kpi_current_l">Jaehrliche Gesamtkosten – Heute</div>
+              <div id="kpi_current_cost" class="v">–</div>
             </div>
-            <div>
-              <label id="t_label_freq">Reinigungen/Woche</label>
-              <input id="q_freq" type="number" value="5" step="0.1" min="0">
+            <div class="kpi">
+              <div class="l" id="t_kpi_robot_l">Jaehrliche Gesamtkosten – Mit Roboter</div>
+              <div id="kpi_robot_cost" class="v">–</div>
             </div>
-            <div>
-              <label id="t_label_weeks">Wochen/Jahr</label>
-              <input id="q_weeks" type="number" value="52" min="1" max="53">
+            <div class="kpi">
+              <div class="l" id="t_kpi_savings_l">Ersparnis p.a.</div>
+              <div id="kpi_savings" class="v">–</div>
+            </div>
+            <div class="kpi">
+              <div class="l" id="t_kpi_payback_l">Payback</div>
+              <div id="kpi_payback" class="v">–</div>
             </div>
           </div>
-        </div>
+        </section>
+      </aside>
 
-        <div class="section">
-          <div class="section-title" id="t_quick_section_today">Heutiger Prozess</div>
-          <div class="section-grid">
-            <div>
-              <label id="t_label_wage">Stundenlohn inkl. NK (CHF/h)</label>
-              <input id="q_wage" type="number" value="35" step="0.5" min="0">
-            </div>
-            <div>
-              <label id="t_label_currprod">Heutige Produktivitaet (m²/h)</label>
-              <input id="q_curr_prod" type="number" value="1200" min="1">
-            </div>
-          </div>
-        </div>
-
-        <div class="section">
-          <div class="section-title" id="t_quick_section_robot">Roboter-Setup</div>
-          <div class="section-grid">
-            <div>
-              <label id="t_label_model">Modell</label>
-              <select id="q_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select>
-            </div>
-            <div>
-              <label id="t_label_util">Nutzungsgrad (Fahrzeit)</label>
-              <input id="q_util" type="number" value="0.85" step="0.01" min="0" max="1">
-              <div class="hint" id="t_hint_util">0.85 = 85%</div>
-            </div>
-            <div>
-              <label id="t_label_opratio">Operator-Aufwand (% Fahrzeit)</label>
-              <input id="q_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1">
-            </div>
-            <div>
-              <label id="t_label_service">Service & Verschleiss p.a. (CHF)</label>
-              <input id="q_service" type="number" value="2500" min="0" step="50">
-            </div>
-          </div>
-        </div>
-
-        <div class="row" style="flex-wrap:wrap; gap:16px">
-          <button class="btn btn-primary" id="btn_quick">Berechnen</button>
-          <button class="btn" id="btn_reset">Reset</button>
-          <button class="btn" id="btn_print">PDF/Print</button>
-        </div>
-        <div class="hint" id="t_quick_hint">Quick-Calc nimmt typische Energiekosten, Wasser/Chemie und Abschreibung automatisch an (siehe Tab Annahmen).</div>
-      </div>
-
-      <div class="col-6 card">
-        <h3 id="t_quick_result_h3">Ergebnis (Quick)</h3>
-        <div id="quick_results" class="results small muted"><div>Noch keine Berechnung.</div></div>
-      </div>
-    </div>
-
-    <!-- Deep -->
-    <div class="grid tabpanel" id="panel-deep" style="display:none">
-      <div class="col-8 card">
-        <h2 id="t_deep_h2">Deep-Calc – Kostenfaktoren</h2>
-        <div class="section">
-          <h3 id="t_deep_now" class="section-title">Heutiger Prozess</h3>
-          <div class="section-grid">
-            <div>
-              <label id="t_label_d_currprod">Produktivitaet heute (m²/h)</label>
-              <input id="d_curr_prod" type="number" value="1200" min="1">
-            </div>
-            <div>
-              <label id="t_label_d_currmachine">Maschinenkosten heute p.a. (CHF)</label>
-              <input id="d_curr_machine" type="number" value="1500" min="0">
-            </div>
-            <div>
-              <label id="t_label_d_currcons">Verbrauch p.a. (CHF)</label>
-              <input id="d_curr_cons" type="number" value="1000" min="0">
-            </div>
-            <div>
-              <label id="t_label_d_currenergy">Energie p.a. (CHF)</label>
-              <input id="d_curr_energy" type="number" value="500" min="0">
-            </div>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 id="t_deep_robot" class="section-title">Roboterprozess</h3>
-          <div class="section-grid">
-            <div>
-              <label id="t_label_d_model">Modell</label>
-              <select id="d_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select>
-            </div>
-            <div>
-              <label id="t_label_d_util">Nutzungsgrad (Fahrzeit)</label>
-              <input id="d_util" type="number" value="0.85" step="0.01" min="0" max="1">
-            </div>
-            <div>
-              <label id="t_label_d_opratio">Operator-Aufwand (% Fahrzeit)</label>
-              <input id="d_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1">
-            </div>
-            <div>
-              <label id="t_label_d_service">Service & Verschleiss p.a. (CHF)</label>
-              <input id="d_service" type="number" value="2500" min="0" step="50">
-            </div>
-            <div>
-              <label id="t_label_d_energy">Energie p.a. (CHF)</label>
-              <input id="d_energy" type="number" value="350" min="0" step="10">
-            </div>
-            <div>
-              <label id="t_label_d_cons">Wasser/Chemie p.a. (CHF)</label>
-              <input id="d_cons" type="number" value="800" min="0" step="10">
-            </div>
-            <div>
-              <label id="t_label_d_price">Anschaffungspreis (CHF)</label>
-              <input id="d_price" type="number" value="35000" min="0">
-            </div>
-            <div>
-              <label id="t_label_d_life">Abschreibung (Jahre)</label>
-              <input id="d_life" type="number" value="5" min="1">
-            </div>
-            <div>
-              <label id="t_label_d_onboard">Onboarding (einmalig, CHF)</label>
-              <input id="d_onboard" type="number" value="1000" min="0">
-            </div>
-            <div>
-              <label id="t_label_d_finance">Finanzierung p.a. (CHF)</label>
-              <input id="d_finance" type="number" value="0" min="0">
-            </div>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3 id="t_deep_profile" class="section-title">Einsatzprofil</h3>
-          <div class="section-grid">
-            <div>
-              <label id="t_label_d_area">Flaeche pro Reinigung (m²)</label>
-              <input id="d_area" type="number" value="10000" min="0">
-            </div>
-            <div>
-              <label id="t_label_d_freq">Reinigungen/Woche</label>
-              <input id="d_freq" type="number" value="5" min="0" step="0.1">
-            </div>
-            <div>
-              <label id="t_label_d_weeks">Wochen/Jahr</label>
-              <input id="d_weeks" type="number" value="52" min="1" max="53">
-            </div>
-            <div>
-              <label id="t_label_d_wage">Stundenlohn inkl. NK (CHF/h)</label>
-              <input id="d_wage" type="number" value="35" min="0" step="0.5">
-            </div>
-            <div>
-              <label id="t_label_d_superv">Supervision (Min/1000 m²)</label>
-              <input id="d_superv_perk" type="number" value="3" min="0" step="0.5">
-            </div>
-            <div>
-              <label id="t_label_d_downtime">Puffer Stoerungen (% Zeit)</label>
-              <input id="d_downtime" type="number" value="0.1" min="0" max="1" step="0.01">
-            </div>
-          </div>
-        </div>
-
-        <div class="row" style="flex-wrap:wrap; gap:16px">
-          <button class="btn btn-primary" id="btn_deep">Berechnen (Deep)</button>
-          <button class="btn" id="btn_fill_from_quick">Mit Quick-Werten fuellen</button>
-        </div>
-      </div>
-
-      <div class="col-4 card">
-        <h3 id="t_deep_result_h3">Ergebnis (Deep)</h3>
-        <div id="deep_results" class="results small muted"><div>Noch keine Berechnung.</div></div>
-      </div>
-    </div>
-
-    <!-- Annahmen -->
-    <div class="grid tabpanel" id="panel-assumptions" style="display:none">
-      <div class="col-12 card">
-        <h2 id="t_assumptions_h2">Annahmen & Defaults</h2>
-        <div class="grid">
-          <div class="col-6">
-            <h3 id="t_assumptions_prod_h3">Produktivitaet (m²/h)</h3>
-            <div class="row" style="gap:18px; align-items:flex-end">
-              <div style="flex:1"><label id="t_label_a_currprod">Heutiger Prozess</label><input id="a_curr_prod" type="number" value="1200"></div>
-              <div style="flex:1"><label>RA-660 Navi XL</label><input id="a_xl_prod" type="number" value="1250"></div>
-              <div style="flex:1"><label>RA-660 Navi M</label><input id="a_m_prod" type="number" value="1250"></div>
-            </div>
-          </div>
-          <div class="col-6">
-            <h3 id="t_assumptions_cost_h3">Kosten/Verbrauch</h3>
-            <div class="row" style="gap:18px; align-items:flex-end">
-              <div style="flex:1"><label id="t_label_a_powerprice">Strompreis (CHF/kWh)</label><input id="a_power_price" type="number" value="0.25" step="0.01"></div>
-              <div style="flex:1"><label id="t_label_a_powerperk">Energie (kWh/1000 m²)</label><input id="a_power_perk" type="number" value="2.0" step="0.1"></div>
-              <div style="flex:1"><label id="t_label_a_consperk">Wasser/Chemie (CHF/1000 m²)</label><input id="a_cons_perk" type="number" value="6.0" step="0.5"></div>
-            </div>
-            <div class="row" style="gap:18px; margin-top:12px">
-              <div style="flex:1"><label id="t_label_a_weeks">Wochen/Jahr</label><input id="a_weeks" type="number" value="52"></div>
-              <div style="flex:1"><label id="t_label_a_life">Abschreibung (Jahre)</label><input id="a_life" type="number" value="5"></div>
-              <div style="flex:1"><label id="t_label_a_service">Service p.a. (CHF)</label><input id="a_service" type="number" value="2500"></div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <h3 id="t_assumptions_batt_h3">Akkulaufzeit & Laden</h3>
-            <div class="row" style="gap:18px; align-items:flex-end">
-              <div style="flex:1"><label id="t_label_a_battruntime">Akkulaufzeit Fahrzeit (h) – 100%→0%</label><input id="a_batt_runtime" type="number" value="3.0" step="0.1"></div>
-              <div style="flex:1"><label id="t_label_a_chargetime">Ladezeit bis 80% (h)</label><input id="a_charge_time" type="number" value="0.667" step="0.01"></div>
-              <div style="flex:1"><label id="t_label_a_handlingm">Handling beim M je Event (Min)</label><input id="a_handling_m" type="number" value="5" step="1"></div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <h3 id="t_assumptions_strategy_h3">Ladestrategie</h3>
-            <div class="row" style="gap:18px; align-items:flex-end">
-              <div style="flex:1"><label id="t_label_a_xldock">XL: Dock vorhanden?</label>
-                <select id="a_xl_dock">
-                  <option value="1" selected>Ja (autonomes Zwischenladen)</option>
-                  <option value="0">Nein (manuelles Laden wie M)</option>
-                </select>
+      <main class="content">
+        <div class="tabpanel" id="panel-quick">
+          <div class="content-grid">
+            <section class="panel">
+              <div class="panel__header">
+                <h2 id="t_quick_h2">Quick-Calc</h2>
               </div>
-              <div style="flex:1"><label id="t_label_a_windowratio">Verfuegbare Fahrzeit pro Zyklus (80%→20%)</label><input id="a_window_ratio" type="number" value="0.6" step="0.05"><div class="hint" id="t_hint_windowratio">Fahrzeit/Zyklus = Akkulaufzeit × 0.6</div></div>
-              <div style="flex:1"><label id="t_label_a_xlpartial">XL Zwischenladen 20%→40% (Anteil von 40-min-Ladung)</label><input id="a_xl_partial_ratio" type="number" value="0.25" step="0.05"><div class="hint" id="t_hint_xlpartial">≈ 10 Minuten</div></div>
-            </div>
+              <div class="section-group">
+                <div class="section">
+                  <h3 id="t_quick_section_profile">Einsatzprofil</h3>
+                  <div class="field-grid">
+                    <div>
+                      <label id="t_label_area">Flaeche pro Reinigung (m²)</label>
+                      <input id="q_area" type="number" value="10000" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_freq">Reinigungen/Woche</label>
+                      <input id="q_freq" type="number" value="5" step="0.1" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_weeks">Wochen/Jahr</label>
+                      <input id="q_weeks" type="number" value="52" min="1" max="53">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <h3 id="t_quick_section_today">Heutiger Prozess</h3>
+                  <div class="field-grid">
+                    <div>
+                      <label id="t_label_wage">Stundenlohn inkl. NK (CHF/h)</label>
+                      <input id="q_wage" type="number" value="35" step="0.5" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_curr_prod">Heutige Produktivitaet (m²/h)</label>
+                      <input id="q_curr_prod" type="number" value="1200" min="1">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <h3 id="t_quick_section_robot">Roboter-Setup</h3>
+                  <div class="field-grid field-grid--compact">
+                    <div>
+                      <label id="t_label_model">Modell</label>
+                      <select id="q_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select>
+                    </div>
+                    <div>
+                      <label id="t_label_util">Nutzungsgrad (Fahrzeit)</label>
+                      <input id="q_util" type="number" value="0.85" step="0.01" min="0" max="1">
+                      <div class="hint" id="t_hint_util">0.85 = 85%</div>
+                    </div>
+                    <div>
+                      <label id="t_label_op_ratio">Operator-Aufwand (% Fahrzeit)</label>
+                      <input id="q_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1">
+                    </div>
+                    <div>
+                      <label id="t_label_service">Service & Verschleiss p.a. (CHF)</label>
+                      <input id="q_service" type="number" value="2500" min="0" step="50">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" id="btn_quick">Berechnen</button>
+                <button class="btn" id="btn_reset">Reset</button>
+                <button class="btn" id="btn_print">PDF/Print</button>
+              </div>
+              <div class="hint" id="t_quick_hint">Quick-Calc nimmt typische Energiekosten, Wasser/Chemie und Abschreibung automatisch an (siehe Tab Annahmen).</div>
+            </section>
+
+            <section class="panel">
+              <h3 id="t_quick_result_h3">Ergebnis (Quick)</h3>
+              <div id="quick_results" class="results small muted"><div>Noch keine Berechnung.</div></div>
+            </section>
           </div>
         </div>
-        <div class="row"><button class="btn" id="btn_apply_defaults">Annahmen auf Quick/Deep anwenden</button></div>
-      </div>
+
+        <div class="tabpanel" id="panel-deep" style="display:none">
+          <div class="content-grid">
+            <section class="panel">
+              <h2 id="t_deep_h2">Deep-Calc – Kostenfaktoren</h2>
+              <div class="section-group">
+                <div class="section">
+                  <h3 id="t_deep_now">Heutiger Prozess</h3>
+                  <div class="field-grid">
+                    <div>
+                      <label id="t_label_d_currprod">Produktivitaet heute (m²/h)</label>
+                      <input id="d_curr_prod" type="number" value="1200" min="1">
+                    </div>
+                    <div>
+                      <label id="t_label_d_currmachine">Maschinenkosten heute p.a. (CHF)</label>
+                      <input id="d_curr_machine" type="number" value="1500" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_d_currcons">Verbrauch p.a. (CHF)</label>
+                      <input id="d_curr_cons" type="number" value="1000" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_d_currenergy">Energie p.a. (CHF)</label>
+                      <input id="d_curr_energy" type="number" value="500" min="0">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <h3 id="t_deep_robot">Roboterprozess</h3>
+                  <div class="field-grid field-grid--compact">
+                    <div>
+                      <label id="t_label_d_model">Modell</label>
+                      <select id="d_model"><option value="XL">RA-660 Navi XL</option><option value="M">RA-660 Navi M</option></select>
+                    </div>
+                    <div>
+                      <label id="t_label_d_util">Nutzungsgrad (Fahrzeit)</label>
+                      <input id="d_util" type="number" value="0.85" step="0.01" min="0" max="1">
+                    </div>
+                    <div>
+                      <label id="t_label_d_opratio">Operator-Aufwand (% Fahrzeit)</label>
+                      <input id="d_op_ratio" type="number" value="0.2" step="0.01" min="0" max="1">
+                    </div>
+                    <div>
+                      <label id="t_label_d_service">Service & Verschleiss p.a. (CHF)</label>
+                      <input id="d_service" type="number" value="2500" min="0" step="50">
+                    </div>
+                    <div>
+                      <label id="t_label_d_energy">Energie p.a. (CHF)</label>
+                      <input id="d_energy" type="number" value="350" min="0" step="10">
+                    </div>
+                    <div>
+                      <label id="t_label_d_cons">Wasser/Chemie p.a. (CHF)</label>
+                      <input id="d_cons" type="number" value="800" min="0" step="10">
+                    </div>
+                    <div>
+                      <label id="t_label_d_price">Anschaffungspreis (CHF)</label>
+                      <input id="d_price" type="number" value="35000" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_d_life">Abschreibung (Jahre)</label>
+                      <input id="d_life" type="number" value="5" min="1">
+                    </div>
+                    <div>
+                      <label id="t_label_d_onboard">Onboarding (einmalig, CHF)</label>
+                      <input id="d_onboard" type="number" value="1000" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_d_finance">Finanzierung p.a. (CHF)</label>
+                      <input id="d_finance" type="number" value="0" min="0">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <h3 id="t_deep_profile">Einsatzprofil</h3>
+                  <div class="field-grid">
+                    <div>
+                      <label id="t_label_d_area">Flaeche pro Reinigung (m²)</label>
+                      <input id="d_area" type="number" value="10000" min="0">
+                    </div>
+                    <div>
+                      <label id="t_label_d_freq">Reinigungen/Woche</label>
+                      <input id="d_freq" type="number" value="5" min="0" step="0.1">
+                    </div>
+                    <div>
+                      <label id="t_label_d_weeks">Wochen/Jahr</label>
+                      <input id="d_weeks" type="number" value="52" min="1" max="53">
+                    </div>
+                    <div>
+                      <label id="t_label_d_wage">Stundenlohn inkl. NK (CHF/h)</label>
+                      <input id="d_wage" type="number" value="35" min="0" step="0.5">
+                    </div>
+                    <div>
+                      <label id="t_label_d_superv">Supervision (Min/1000 m²)</label>
+                      <input id="d_superv_perk" type="number" value="3" min="0" step="0.5">
+                    </div>
+                    <div>
+                      <label id="t_label_d_downtime">Puffer Stoerungen (% Zeit)</label>
+                      <input id="d_downtime" type="number" value="0.1" min="0" max="1" step="0.01">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" id="btn_deep">Berechnen (Deep)</button>
+                <button class="btn" id="btn_fill_from_quick">Mit Quick-Werten fuellen</button>
+              </div>
+            </section>
+
+            <section class="panel">
+              <h3 id="t_deep_result_h3">Ergebnis (Deep)</h3>
+              <div id="deep_results" class="results small muted"><div>Noch keine Berechnung.</div></div>
+            </section>
+          </div>
+        </div>
+
+        <div class="tabpanel" id="panel-assumptions" style="display:none">
+          <section class="panel">
+            <h2 id="t_assumptions_h2">Annahmen & Defaults</h2>
+            <div class="section-group">
+              <div class="section">
+                <h3 id="t_assumptions_prod_h3">Produktivitaet (m²/h)</h3>
+                <div class="field-grid">
+                  <div>
+                    <label id="t_label_a_currprod">Heutiger Prozess</label>
+                    <input id="a_curr_prod" type="number" value="1200">
+                  </div>
+                  <div>
+                    <label>RA-660 Navi XL</label>
+                    <input id="a_xl_prod" type="number" value="1250">
+                  </div>
+                  <div>
+                    <label>RA-660 Navi M</label>
+                    <input id="a_m_prod" type="number" value="1250">
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 id="t_assumptions_cost_h3">Kosten/Verbrauch</h3>
+                <div class="field-grid">
+                  <div>
+                    <label id="t_label_a_power_price">Strompreis (CHF/kWh)</label>
+                    <input id="a_power_price" type="number" value="0.25" step="0.01">
+                  </div>
+                  <div>
+                    <label id="t_label_a_power_perk">Energie (kWh/1000 m²)</label>
+                    <input id="a_power_perk" type="number" value="2.0" step="0.1">
+                  </div>
+                  <div>
+                    <label id="t_label_a_cons_perk">Wasser/Chemie (CHF/1000 m²)</label>
+                    <input id="a_cons_perk" type="number" value="6.0" step="0.5">
+                  </div>
+                  <div>
+                    <label id="t_label_a_weeks">Wochen/Jahr</label>
+                    <input id="a_weeks" type="number" value="52">
+                  </div>
+                  <div>
+                    <label id="t_label_a_life">Abschreibung (Jahre)</label>
+                    <input id="a_life" type="number" value="5">
+                  </div>
+                  <div>
+                    <label id="t_label_a_service">Service p.a. (CHF)</label>
+                    <input id="a_service" type="number" value="2500">
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 id="t_assumptions_batt_h3">Akkulaufzeit & Laden</h3>
+                <div class="field-grid">
+                  <div>
+                    <label id="t_label_a_battruntime">Akkulaufzeit Fahrzeit (h) – 100%→0%</label>
+                    <input id="a_batt_runtime" type="number" value="3.0" step="0.1">
+                  </div>
+                  <div>
+                    <label id="t_label_a_chargetime">Ladezeit bis 80% (h)</label>
+                    <input id="a_charge_time" type="number" value="0.667" step="0.01">
+                  </div>
+                  <div>
+                    <label id="t_label_a_handlingm">Handling beim M je Event (Min)</label>
+                    <input id="a_handling_m" type="number" value="5" step="1">
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 id="t_assumptions_strategy_h3">Ladestrategie</h3>
+                <div class="field-grid">
+                  <div>
+                    <label id="t_label_a_xldock">XL: Dock vorhanden?</label>
+                    <select id="a_xl_dock">
+                      <option value="1" selected>Ja (autonomes Zwischenladen)</option>
+                      <option value="0">Nein (manuelles Laden wie M)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label id="t_label_a_windowratio">Verfuegbare Fahrzeit pro Zyklus (80%→20%)</label>
+                    <input id="a_window_ratio" type="number" value="0.6" step="0.05">
+                    <div class="hint" id="t_hint_windowratio">Fahrzeit/Zyklus = Akkulaufzeit × 0.6</div>
+                  </div>
+                  <div>
+                    <label id="t_label_a_xlpartial">XL Zwischenladen 20%→40% (Anteil von 40-min-Ladung)</label>
+                    <input id="a_xl_partial_ratio" type="number" value="0.25" step="0.05">
+                    <div class="hint" id="t_hint_xlpartial">≈ 10 Minuten</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn" id="btn_apply_defaults">Annahmen auf Quick/Deep anwenden</button>
+            </div>
+          </section>
+        </div>
+      </main>
     </div>
 
-    <div class="foot">
-      <div class="small">© Cleanfix Robotics – ROI-Calculator</div>
-      <div class="small">Tipp: Mit <b>PDF/Print</b> bekommst du einen sauberen Ausdruck für die Kundenmappe.</div>
-    </div>
+    <footer class="foot">
+      <div>© Cleanfix Robotics – ROI-Calculator</div>
+      <div>Tipp: Mit <b>PDF/Print</b> bekommst du einen sauberen Ausdruck für die Kundenmappe.</div>
+    </footer>
   </div>
 
 <script>
@@ -451,76 +744,97 @@
   function applyI18N(lang){
     const langKey = STR[lang] ? lang : 'de';
     const S = STR[langKey];
-    const ids = [["t_title","title"],["t_subtitle","subtitle"],["t_tab_quick","tab_quick"],["t_tab_deep","tab_deep"],["t_tab_assumptions","tab_assumptions"],["t_kpi_current_l","kpi_current_l"],["t_kpi_robot_l","kpi_robot_l"],["t_kpi_savings_l","kpi_savings_l"],["t_kpi_payback_l","kpi_payback_l"],["t_quick_h2","quick_h2"],["t_quick_section_profile","quick_section_profile"],["t_quick_section_today","quick_section_today"],["t_quick_section_robot","quick_section_robot"],["t_label_model","label_model"],["t_label_util","label_util"],["t_hint_util","hint_util"],["t_label_area","label_area"],["t_label_freq","label_freq"],["t_label_weeks","label_weeks"],["t_label_wage","label_wage"],["t_label_currprod","label_currprod"],["t_label_opratio","label_opratio"],["t_label_service","label_service"],["t_quick_hint","quick_hint"],["t_quick_result_h3","quick_result_h3"],["t_deep_h2","deep_h2"],["t_deep_now","deep_now"],["t_deep_robot","deep_robot"],["t_deep_profile","deep_profile"],["t_deep_result_h3","deep_result_h3"],["t_label_d_currprod","label_d_currprod"],["t_label_d_currmachine","label_d_currmachine"],["t_label_d_currcons","label_d_currcons"],["t_label_d_currenergy","label_d_currenergy"],["t_label_d_model","label_d_model"],["t_label_d_util","label_d_util"],["t_label_d_opratio","label_d_opratio"],["t_label_d_service","label_d_service"],["t_label_d_energy","label_d_energy"],["t_label_d_cons","label_d_cons"],["t_label_d_price","label_d_price"],["t_label_d_life","label_d_life"],["t_label_d_onboard","label_d_onboard"],["t_label_d_finance","label_d_finance"],["t_label_d_area","label_d_area"],["t_label_d_freq","label_d_freq"],["t_label_d_weeks","label_d_weeks"],["t_label_d_wage","label_d_wage"],["t_label_d_superv","label_d_superv"],["t_label_d_downtime","label_d_downtime"],["t_assumptions_h2","assumptions_h2"],["t_assumptions_prod_h3","assumptions_prod_h3"],["t_assumptions_cost_h3","assumptions_cost_h3"],["t_label_a_currprod","label_a_currprod"],["t_label_a_powerprice","label_a_powerprice"],["t_label_a_powerperk","label_a_powerperk"],["t_label_a_consperk","label_a_consperk"],["t_label_a_weeks","label_a_weeks"],["t_label_a_life","label_a_life"],["t_label_a_service","label_a_service"],["t_assumptions_batt_h3","assumptions_batt_h3"],["t_label_a_battruntime","label_a_battruntime"],["t_label_a_chargetime","label_a_chargetime"],["t_label_a_handlingm","label_a_handlingm"],["t_assumptions_strategy_h3","assumptions_strategy_h3"],["t_label_a_xldock","label_a_xldock"],["t_label_a_windowratio","label_a_windowratio"],["t_hint_windowratio","hint_windowratio"],["t_label_a_xlpartial","label_a_xlpartial"],["t_hint_xlpartial","hint_xlpartial"],["btn_quick","btn_calc_quick"],["btn_reset","btn_reset"],["btn_print","btn_print"],["btn_deep","btn_calc_deep"],["btn_fill_from_quick","btn_fill_from_quick"],["btn_apply_defaults","btn_apply_defaults"]];
-    ids.forEach(([id,key]) => { const el=document.getElementById(id); if(el) el.textContent=S[key]; });
-    const qr=document.getElementById("quick_results"); if(qr && (qr.textContent.trim()==="Noch keine Berechnung." || qr.textContent.trim()==="No calculation yet.")) qr.textContent=S.res_quick_none;
-    document.documentElement.lang=langKey; localStorage.setItem("roi_lang",langKey);
-    const langBtn=document.getElementById("btn_lang");
-    if(langBtn){
-      const label = langKey === 'de' ? 'Sprache wechseln' : 'Switch language';
-      langBtn.title = label;
-      langBtn.setAttribute('aria-label', label);
-    }
-    const currentTheme = document.body.classList.contains('light') ? 'light' : 'dark';
-    setThemeIcon(currentTheme);
+    const ids = [["t_title","title"],["t_subtitle","subtitle"],["t_tab_quick","tab_quick"],["t_tab_deep","tab_deep"],["t_tab_assumptions","tab_assumptions"],["t_kpi_current_l","kpi_current_l"],["t_kpi_robot_l","kpi_robot_l"],["t_kpi_savings_l","kpi_savings_l"],["t_kpi_payback_l","kpi_payback_l"],["t_quick_h2","quick_h2"],["t_quick_section_profile","quick_section_profile"],["t_quick_section_today","quick_section_today"],["t_quick_section_robot","quick_section_robot"],["t_label_model","label_model"],["t_label_util","label_util"],["t_hint_util","hint_util"],["t_label_area","label_area"],["t_label_freq","label_freq"],["t_label_weeks","label_weeks"],["t_label_wage","label_wage"],["t_label_curr_prod","label_currprod"],["t_label_op_ratio","label_opratio"],["t_label_service","label_service"],["t_quick_hint","quick_hint"],["t_quick_result_h3","quick_result_h3"],["t_deep_h2","deep_h2"],["t_deep_now","deep_now"],["t_deep_robot","deep_robot"],["t_deep_profile","deep_profile"],["t_deep_result_h3","deep_result_h3"],["t_label_d_currprod","label_d_currprod"],["t_label_d_currmachine","label_d_currmachine"],["t_label_d_currcons","label_d_currcons"],["t_label_d_currenergy","label_d_currenergy"],["t_label_d_model","label_d_model"],["t_label_d_util","label_d_util"],["t_label_d_opratio","label_d_opratio"],["t_label_d_service","label_d_service"],["t_label_d_energy","label_d_energy"],["t_label_d_cons","label_d_cons"],["t_label_d_price","label_d_price"],["t_label_d_life","label_d_life"],["t_label_d_onboard","label_d_onboard"],["t_label_d_finance","label_d_finance"],["t_label_d_area","label_d_area"],["t_label_d_freq","label_d_freq"],["t_label_d_weeks","label_d_weeks"],["t_label_d_wage","label_d_wage"],["t_label_d_superv","label_d_superv"],["t_label_d_downtime","label_d_downtime"],["t_assumptions_h2","assumptions_h2"],["t_assumptions_prod_h3","assumptions_prod_h3"],["t_assumptions_cost_h3","assumptions_cost_h3"],["t_label_a_currprod","label_a_currprod"],["t_label_a_power_price","label_a_powerprice"],["t_label_a_power_perk","label_a_powerperk"],["t_label_a_cons_perk","label_a_consperk"],["t_label_a_weeks","label_a_weeks"],["t_label_a_life","label_a_life"],["t_label_a_service","label_a_service"],["t_assumptions_batt_h3","assumptions_batt_h3"],["t_label_a_battruntime","label_a_battruntime"],["t_label_a_chargetime","label_a_chargetime"],["t_label_a_handlingm","label_a_handlingm"],["t_assumptions_strategy_h3","assumptions_strategy_h3"],["t_label_a_xldock","label_a_xldock"],["t_label_a_windowratio","label_a_windowratio"],["t_hint_windowratio","hint_windowratio"],["t_label_a_xlpartial","label_a_xlpartial"],["t_hint_xlpartial","hint_xlpartial"],["btn_quick","btn_calc_quick"],["btn_reset","btn_reset"],["btn_print","btn_print"],["btn_deep","btn_calc_deep"],["btn_fill_from_quick","btn_fill_from_quick"],["btn_apply_defaults","btn_apply_defaults"],["t_quick_result_h3","quick_result_h3"],["t_deep_result_h3","deep_result_h3"],["quick_results","res_quick_none",true],["deep_results","res_quick_none",true]];
+    ids.forEach(([id,key,isHtml])=>{
+      const el=document.getElementById(id);
+      if(el && S[key]){
+        if(isHtml){ el.innerHTML = `<div>${S[key]}</div>`; }
+        else el.textContent=S[key];
+      }
+    });
+    document.documentElement.lang = langKey;
   }
 
-  /* ====== Theme ====== */
   function applyTheme(theme){
-    const b=document.body;
-    if(theme==="light"){ b.classList.add("light"); } else { b.classList.remove("light"); }
-    setThemeIcon(theme);
-    localStorage.setItem("roi_theme",theme);
+    const target = theme==='light'?'light':'dark';
+    document.body.classList.toggle('light', target==='light');
+    localStorage.setItem('roi_theme', target);
+    setThemeIcon(target);
   }
 
-  document.getElementById("btn_lang").addEventListener("click", ()=>{ const curr=getActiveLang(); applyI18N(curr==="de"?"en":"de"); });
-  document.getElementById("btn_theme").addEventListener("click", ()=>{ const curr=localStorage.getItem("roi_theme")||"dark"; applyTheme(curr==="dark"?"light":"dark"); });
-
-  /* ====== Math Helpers ====== */
-  const fmtCHF = (v) => {
-    if(!isFinite(v)) return '–';
-    const lang = getActiveLang();
-    const locale = lang === 'en' ? 'en-GB' : 'de-CH';
-    return new Intl.NumberFormat(locale, { style: 'currency', currency: 'CHF', maximumFractionDigits: 0 }).format(v);
-  };
-  const fmtH = (v) => {
-    if(!isFinite(v)) return '–';
-    const lang = getActiveLang();
-    const locale = lang === 'en' ? 'en-GB' : 'de-CH';
-    return (Math.round(v*10)/10).toLocaleString(locale) + ' h';
-  };
-  const clamp = (v, mn, mx) => Math.min(mx, Math.max(mn, v));
-
-  const defaults = { curr_prod:1200, prod:{XL:1250, M:1250}, weeks:52, power_price:0.25, power_perk:2.0, cons_perk:6.0, service:2500, life:5, batt_runtime:3.0, charge_time:0.667, handling_m_min:5, xl_dock:1, window_ratio:0.6, xl_partial_ratio:0.25 };
-
-  function getAnnahmen(){ return { curr_prod:+document.getElementById('a_curr_prod').value||defaults.curr_prod, prodXL:+document.getElementById('a_xl_prod').value||defaults.prod.XL, prodM:+document.getElementById('a_m_prod').value||defaults.prod.M, power_price:+document.getElementById('a_power_price').value||defaults.power_price, power_perk:+document.getElementById('a_power_perk').value||defaults.power_perk, cons_perk:+document.getElementById('a_cons_perk').value||defaults.cons_perk, weeks:+document.getElementById('a_weeks').value||defaults.weeks, life:+document.getElementById('a_life').value||defaults.life, service:+document.getElementById('a_service').value||defaults.service, batt_runtime:+document.getElementById('a_batt_runtime').value||defaults.batt_runtime, charge_time:+document.getElementById('a_charge_time').value||defaults.charge_time, handling_m_min:+document.getElementById('a_handling_m').value||defaults.handling_m_min, xl_dock:+document.getElementById('a_xl_dock').value||defaults.xl_dock, window_ratio:+document.getElementById('a_window_ratio').value||defaults.window_ratio, xl_partial_ratio:+document.getElementById('a_xl_partial_ratio').value||defaults.xl_partial_ratio }; }
-  const modelProd = (m)=>{ const a=getAnnahmen(); return m==='XL'?a.prodXL:a.prodM; }
-
-  function chargeInfo(hoursMoving, a, model){
-    const windowHours = a.batt_runtime * a.window_ratio; // 80%→20%
-    if (hoursMoving <= windowHours) return {events:0, downtime:0, perEvent:0};
-    const events = Math.ceil(hoursMoving / windowHours) - 1;
-    const perEvent = (model==='XL' && a.xl_dock==1) ? (a.charge_time * a.xl_partial_ratio) : a.charge_time;
-    const downtime = events * perEvent;
-    return {events, downtime, perEvent};
+  function toggleTheme(){
+    const current = localStorage.getItem('roi_theme') || 'dark';
+    applyTheme(current==='dark'?'light':'dark');
   }
 
-  /* ====== KPI Updater ====== */
-  function setKPIs(currCost, robotCost, savings, paybackMonths){
-    const lang = getActiveLang();
-    const S = STR[lang];
-    const locale = lang === 'en' ? 'en-GB' : 'de-CH';
-    document.getElementById('kpi_current_cost').textContent = fmtCHF(currCost);
-    document.getElementById('kpi_robot_cost').textContent = fmtCHF(robotCost);
-    const sv = document.getElementById('kpi_savings'); sv.textContent = fmtCHF(savings); sv.className = 'v ' + (savings >= 0 ? 'save-good' : 'save-bad');
-    document.getElementById('kpi_payback').textContent = (paybackMonths && isFinite(paybackMonths) && paybackMonths > 0) ? (Math.round(paybackMonths*10)/10).toLocaleString(locale) + ' ' + S.months : '–';
-  }
+  document.getElementById('btn_theme').addEventListener('click', toggleTheme);
 
-  /* ====== Tabs ====== */
+  document.getElementById('btn_lang').addEventListener('click', ()=>{
+    const next = getActiveLang()==='de'?'en':'de';
+    localStorage.setItem('roi_lang', next);
+    applyI18N(next);
+    setThemeIcon(localStorage.getItem('roi_theme')||'dark');
+  });
+
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); t.classList.add('active');
     const tab = t.dataset.tab; document.querySelectorAll('.tabpanel').forEach(p => p.style.display='none'); document.getElementById('panel-'+tab).style.display = '';
   }));
+
+  function clamp(val,min,max){return Math.max(min,Math.min(val,max));}
+
+  function fmtCHF(v){return v.toLocaleString(getActiveLang()==='en'?'en-GB':'de-CH',{style:'currency',currency:'CHF',maximumFractionDigits:0});}
+  function fmtH(v){return v.toLocaleString(getActiveLang()==='en'?'en-GB':'de-CH',{minimumFractionDigits:1,maximumFractionDigits:1});}
+
+  function getAnnahmen(){
+    return {
+      curr_prod:+document.getElementById('a_curr_prod').value||1200,
+      xl_prod:+document.getElementById('a_xl_prod').value||1250,
+      m_prod:+document.getElementById('a_m_prod').value||1250,
+      power_price:+document.getElementById('a_power_price').value||0.25,
+      power_perk:+document.getElementById('a_power_perk').value||2,
+      cons_perk:+document.getElementById('a_cons_perk').value||6,
+      weeks:+document.getElementById('a_weeks').value||52,
+      life:+document.getElementById('a_life').value||5,
+      service:+document.getElementById('a_service').value||2500,
+      batt_runtime:+document.getElementById('a_batt_runtime').value||3,
+      charge_time:+document.getElementById('a_charge_time').value||0.667,
+      handling_m_min:+document.getElementById('a_handling_m').value||5,
+      xl_dock:+document.getElementById('a_xl_dock').value||1,
+      window_ratio:+document.getElementById('a_window_ratio').value||0.6,
+      xl_partial_ratio:+document.getElementById('a_xl_partial_ratio').value||0.25
+    };
+  }
+
+  function modelProd(model){
+    const a = getAnnahmen();
+    return model==='XL'?a.xl_prod:a.m_prod;
+  }
+
+  function chargeInfo(hoursPerRunMoving, a, model){
+    const runtime = a.batt_runtime;
+    const usable = runtime * a.window_ratio;
+    const events = Math.max(1, Math.ceil(hoursPerRunMoving / usable));
+    const perEvent = hoursPerRunMoving / events;
+    const downtimePerRun = (() => {
+      if(model==='XL' && a.xl_dock==1){
+        const partial = runtime * a.xl_partial_ratio;
+        return Math.max(0, (events-1) * (partial/usable) * 0.167);
+      }
+      const chargeTime = a.charge_time;
+      return Math.max(0, (events-1) * chargeTime);
+    })();
+    return { events, perEvent, downtime: downtimePerRun };
+  }
+
+  function setKPIs(current, robot, savings, paybackMonths){
+    document.getElementById('kpi_current_cost').textContent = fmtCHF(current);
+    document.getElementById('kpi_robot_cost').textContent = fmtCHF(robot);
+    const savingsEl = document.getElementById('kpi_savings');
+    savingsEl.textContent = fmtCHF(savings);
+    savingsEl.className = 'v ' + (savings >= 0 ? 'save-good' : 'save-bad');
+    document.getElementById('kpi_payback').textContent = (paybackMonths && isFinite(paybackMonths)) ? `${(Math.round(paybackMonths*10)/10).toLocaleString(getActiveLang()==='en'?'en-GB':'de-CH')} ${STR[getActiveLang()].months}` : '–';
+  }
 
   /* ====== Quick Calc ====== */
   function quickCalc(){
@@ -528,33 +842,30 @@
     const lang = getActiveLang();
     const S = STR[lang];
     const numberLocale = lang === 'en' ? 'en-GB' : 'de-CH';
+
+    const area = +document.getElementById('q_area').value||0;
+    const freq = +document.getElementById('q_freq').value||0;
+    const weeks = +document.getElementById('q_weeks').value||a.weeks;
+    const wage = +document.getElementById('q_wage').value||0;
+    const curr_prod = +document.getElementById('q_curr_prod').value||a.curr_prod;
     const model = document.getElementById('q_model').value;
-    const util = clamp(+document.getElementById('q_util').value || 0.85, 0, 1);
-    const area = +document.getElementById('q_area').value || 0;
-    const freq = +document.getElementById('q_freq').value || 0;
-    const weeks = +document.getElementById('q_weeks').value || a.weeks;
-    const wage = +document.getElementById('q_wage').value || 0;
-    const currProd = +document.getElementById('q_curr_prod').value || a.curr_prod;
-    const opRatio = clamp(+document.getElementById('q_op_ratio').value || 0.2, 0, 1);
-    const service = +document.getElementById('q_service').value || a.service;
+    const util = clamp(+document.getElementById('q_util').value||0.85,0,1);
+    const opRatio = clamp(+document.getElementById('q_op_ratio').value||0.2,0,1);
+    const service = +document.getElementById('q_service').value||a.service;
 
     const runsPerYear = freq * weeks;
     const m2PerYear = area * runsPerYear;
 
-    const prodNominal = modelProd(model);
-    const hoursPerRunMoving = area / prodNominal;
-    const ch = chargeInfo(hoursPerRunMoving, a, model);
-    const downtimePerRun = ch.downtime;
-
-    const hoursToday = m2PerYear / currProd;
+    const hoursToday = m2PerYear / curr_prod;
     const laborToday = hoursToday * wage;
-    const energyToday = 0.5 * a.power_price * (a.power_perk * m2PerYear/1000);
-    const consToday = 0.6 * a.cons_perk * (m2PerYear/1000);
-    const machineToday = 1500;
-    const totalToday = laborToday + energyToday + consToday + machineToday;
+    const energyToday = a.power_price * (a.power_perk * m2PerYear/1000);
+    const consToday = a.cons_perk * (m2PerYear/1000);
+    const totalToday = laborToday + energyToday + consToday;
 
     const prodRobot = modelProd(model) * util;
     const moveHours = m2PerYear / prodRobot;
+    const ch = chargeInfo(moveHours / runsPerYear, a, model);
+    const downtimePerRun = ch.downtime;
     const extraDowntimeHours = downtimePerRun * runsPerYear;
     const handlingPerEventH = (model==='M' || (model==='XL' && a.xl_dock==0)) ? (a.handling_m_min/60) : 0;
     const handlingHours = ch.events * runsPerYear * handlingPerEventH;
