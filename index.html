@@ -203,9 +203,15 @@
 
     .content { display: flex; flex-direction: column; gap: clamp(24px, 3vw, 32px); }
 
-    .tabpanel { display: none; flex-direction: column; gap: clamp(24px, 3vw, 32px); }
+    .tabpanel {
+      display: none;
+      flex-direction: column;
+      gap: clamp(24px, 3vw, 32px);
+    }
 
-    #panel-quick { display: flex; }
+    .tabpanel.active {
+      display: flex;
+    }
 
     .content-grid {
       display: grid;
@@ -332,7 +338,8 @@
       body { color: #000; font-size: 12pt; }
       .app-shell { width: 100%; padding: 0 12mm; }
       .tabs, .hero__actions, .btn, #btn_print { display: none !important; }
-      .tabpanel { display: block !important; }
+      .tabpanel { display: none !important; }
+      .tabpanel.active { display: block !important; }
       .layout { display: block; }
       .panel, .kpi { box-shadow: none; background: #fff; border: 1px solid var(--border); }
       h2, h3 { color: #000; }
@@ -394,7 +401,7 @@
       </aside>
 
       <main class="content">
-        <div class="tabpanel" id="panel-quick">
+        <div class="tabpanel active" id="panel-quick">
           <div class="content-grid">
             <section class="panel">
               <div class="panel__header">
@@ -471,7 +478,7 @@
           </div>
         </div>
 
-        <div class="tabpanel" id="panel-deep" style="display:none">
+        <div class="tabpanel" id="panel-deep">
           <div class="content-grid">
             <section class="panel">
               <h2 id="t_deep_h2">Deep-Calc – Kostenfaktoren</h2>
@@ -587,7 +594,7 @@
           </div>
         </div>
 
-        <div class="tabpanel" id="panel-assumptions" style="display:none">
+        <div class="tabpanel" id="panel-assumptions">
           <section class="panel">
             <h2 id="t_assumptions_h2">Annahmen & Defaults</h2>
             <div class="section-group">
@@ -777,8 +784,14 @@
   });
 
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); t.classList.add('active');
-    const tab = t.dataset.tab; document.querySelectorAll('.tabpanel').forEach(p => p.style.display='none'); document.getElementById('panel-'+tab).style.display = '';
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+    t.classList.add('active');
+    const tab = t.dataset.tab;
+    const panel = document.getElementById('panel-'+tab);
+    if(panel){
+      panel.classList.add('active');
+    }
   }));
 
   function clamp(val,min,max){return Math.max(min,Math.min(val,max));}
